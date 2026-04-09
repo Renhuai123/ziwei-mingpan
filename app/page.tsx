@@ -68,7 +68,7 @@ function ThemeToggle() {
           color: isDark ? 'rgba(212,180,100,0.85)' : 'rgba(110,72,8,0.8)',
           transition: 'color 0.35s ease',
         }}>
-        {isDark ? '🌙 暗色' : '☀️ 亮色'}
+        {isDark ? '暗色' : '亮色'}
       </span>
     </motion.button>
   );

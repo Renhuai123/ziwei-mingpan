@@ -5,6 +5,9 @@ export interface BirthInfo {
   hour: number;      // 时辰 branch index (0=子, 1=丑, ... 11=亥)
   gender: 'male' | 'female';
   name?: string;
+  province?: string;   // 出生省份
+  city?: string;       // 出生城市
+  longitude?: number;  // 出生地经度（用于真太阳时校正）
 }
 
 export interface LunarInfo {
