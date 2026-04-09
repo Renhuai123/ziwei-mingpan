@@ -20,7 +20,7 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
     <div className="h-full overflow-y-auto p-4 space-y-5 card-glass rounded-xl" style={{ scrollbarWidth: 'thin' }}>
       {/* 标题 */}
       <div>
-        <div className="text-[10px] tracking-[0.4em] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>FENG SHUI · 风水补局</div>
+        <div className="text-[10px] tracking-[0.4em] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.75 }}>FENG SHUI · 风水补局</div>
         <div className="text-xs leading-relaxed" style={{ color: 'var(--t-text2)' }}>
           根据命盘三方四正的五行分布，为你定制风水补局方案。
         </div>
@@ -122,12 +122,12 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
         <div className="grid grid-cols-2 gap-3">
           <div className="text-center p-3.5 rounded-xl"
             style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.15)' }}>
-            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>主吉方</div>
+            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.75 }}>主吉方</div>
             <div className="text-lg font-bold" style={{ color: 'var(--t-gold)' }}>{result.auspiciousDir.main}</div>
           </div>
           <div className="text-center p-3.5 rounded-xl"
             style={{ background: 'rgba(212,168,67,0.04)', border: '1px solid rgba(212,168,67,0.1)' }}>
-            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.4 }}>辅吉方</div>
+            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.65 }}>辅吉方</div>
             <div className="text-lg font-bold" style={{ color: 'var(--t-gold)', opacity: 0.6 }}>{result.auspiciousDir.sub}</div>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
         </p>
       </div>
 
-      <div className="text-[9px] leading-relaxed text-center pb-2" style={{ color: 'var(--t-faint)', opacity: 0.4 }}>
+      <div className="text-[9px] leading-relaxed text-center pb-2" style={{ color: 'var(--t-faint)', opacity: 0.7 }}>
         风水补局仅为辅助参考，配合个人努力方为正道
       </div>
     </div>

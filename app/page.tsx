@@ -125,7 +125,7 @@ const FEATURES = [
     title: '自动检测\n命盘格局',
     subtitle: '从星曜组合中发现你的命中注定',
     points: [
-      '自动识别11种经典格局：紫府同宫、杀破狼格、机月同梁、廉相格、武曲七杀等',
+      '自动识别11种经典格局：紫府同宫、杀破狼格、机月同梁、廉贞天相格、武曲七杀等',
       '辅弼夹命、日月夹命等特殊格局精准检测，并给出倪海夏体系下的标准解读',
       '四化入命宫迁移宫的特殊状况自动标注，提示需关注的人生议题',
       '格局按吉凶等级分层展示，让你一目了然自己命盘中的优势与挑战',
@@ -533,7 +533,7 @@ export default function HomePage() {
                 </div>
 
                 {/* 视觉装饰区 */}
-                <div className={`${i % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''} ${i === 4 ? 'lg:pt-10' : ''}`}>
+                <div className={`${i % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''} lg:pt-10`}>
                   <FadeIn delay={0.15}>
                     <div className="relative rounded-2xl overflow-hidden p-8 md:p-12 transition-all duration-300"
                       style={{
@@ -1002,7 +1002,7 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
   if (index === 3) {
     const patterns = [
       { name: '杀破狼格', desc: '开创进取之命', ok: true },
-      { name: '廉相格',   desc: '行政印绶之格', ok: true },
+      { name: '廉贞天相格', desc: '行政印绶之格', ok: true },
       { name: '化忌入命', desc: '需关注心理课题', ok: false },
     ];
     return (

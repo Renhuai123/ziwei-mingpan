@@ -79,7 +79,7 @@ export function detectPatterns(chart: ZiweiChart): Pattern[] {
   const xianPalace = findStarPalace(chart, '天相');
   if (lianPalace && xianPalace && lianPalace.branch === xianPalace.branch) {
     patterns.push({
-      name: '廉相格',
+      name: '廉贞天相格',
       level: 'good',
       description: '廉贞天相同宫，印绶格局，主人秉公处事，宜任公职或行政管理职务，有清廉之名，贵人相助。',
       palaces: [lianPalace.name],

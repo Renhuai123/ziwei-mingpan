@@ -7,16 +7,16 @@
   --font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
   --font-serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
 
-  /* 暗色主题（默认） */
+  /* 暗色主题（默认） — 暖色护眼 */
   --t-bg:          #020810;
   --t-surface:     #060c1a;
   --t-card:        #040a14;
   --t-border:      rgba(15, 34, 64, 0.6);
   --t-border-acc:  rgba(180, 130, 40, 0.25);
-  --t-text:        #e2e8f0;
-  --t-text2:       #64748b;
-  --t-text3:       #334155;
-  --t-faint:       #1e3550;
+  --t-text:        #f0ece6;
+  --t-text2:       #e8e4e0;
+  --t-text3:       #b8b0a4;
+  --t-faint:       #a8a098;
   --t-gold:        #d4a843;
   --t-gold2:       #f0d070;
   --t-gold-dim:    #8a6a20;
@@ -41,9 +41,9 @@
   --t-border:      rgba(160, 128, 50, 0.25);
   --t-border-acc:  rgba(140, 100, 20, 0.35);
   --t-text:        #1c1407;
-  --t-text2:       #5a4520;
-  --t-text3:       #7a6640;
-  --t-faint:       #a09060;
+  --t-text2:       #3a2c14;
+  --t-text3:       #5a4a30;
+  --t-faint:       #685838;
   --t-gold:        #7a5208;
   --t-gold2:       #9a6810;
   --t-gold-dim:    #c4a060;

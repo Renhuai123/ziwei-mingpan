@@ -251,7 +251,7 @@ export default function StarDetailPanel({ star, palaceName, onClose }: StarDetai
                 <div className="text-[10px] tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--t-gold)', opacity: 0.7 }}>
                   古书原文
                 </div>
-                <p className="text-[11px] leading-relaxed italic" style={{ color: 'var(--t-gold)', opacity: 0.6 }}>{detail.classical}</p>
+                <p className="text-[11px] leading-relaxed italic" style={{ color: 'var(--t-gold)', opacity: 0.8 }}>{detail.classical}</p>
               </div>
             )}
 

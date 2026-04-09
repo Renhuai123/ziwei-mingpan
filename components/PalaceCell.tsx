@@ -9,6 +9,7 @@ interface PalaceCellProps {
   onClick?: () => void;
   onStarClick?: (star: Star) => void;
   isSelected?: boolean;
+  isSanFang?: boolean;
   delay?: number;
 }
 
@@ -30,7 +31,7 @@ const SiHuaBadge = ({ siHua }: { siHua: string }) => {
 };
 
 export default function PalaceCell({
-  palace, onClick, onStarClick, isSelected, delay = 0
+  palace, onClick, onStarClick, isSelected, isSanFang, delay = 0
 }: PalaceCellProps) {
   const { branch, stem, name, stars, daXianAge, isCurrentDaXian, isMingGong, isShenGong } = palace;
   const ganzhi = `${STEMS[stem]}${BRANCHES[branch]}`;
@@ -51,15 +52,21 @@ export default function PalaceCell({
         background: isCurrentDaXian
           ? 'rgba(147,51,234,0.08)'
           : isSelected
+          ? 'rgba(212,168,67,0.10)'
+          : isSanFang
           ? 'rgba(212,168,67,0.06)'
           : isMingGong
           ? 'rgba(212,168,67,0.04)'
           : 'var(--t-bg)',
-        borderLeft: isCurrentDaXian
-          ? '2px solid rgba(147,51,234,0.4)'
+        boxShadow: isCurrentDaXian
+          ? 'inset 3px 0 0 rgba(147,51,234,0.5)'
+          : isSelected
+          ? 'inset 0 0 0 1.5px rgba(212,168,67,0.5)'
+          : isSanFang
+          ? 'inset 0 0 0 1px rgba(212,168,67,0.3)'
           : isMingGong
-          ? '2px solid rgba(212,168,67,0.3)'
-          : '2px solid transparent',
+          ? 'inset 3px 0 0 rgba(212,168,67,0.35)'
+          : 'none',
       }}
     >
       {/* 大限年龄 */}
@@ -68,7 +75,7 @@ export default function PalaceCell({
           'absolute top-1 right-1 text-[9px] font-mono tabular-nums',
           isCurrentDaXian ? 'text-purple-400' : ''
         )}
-          style={!isCurrentDaXian ? { color: 'var(--t-faint)', opacity: 0.5 } : undefined}
+          style={!isCurrentDaXian ? { color: 'var(--t-faint)', opacity: 0.75 } : undefined}
         >
           {daXianAge[0]}–{daXianAge[1]}
         </div>
@@ -92,12 +99,12 @@ export default function PalaceCell({
       </div>
 
       {/* 干支 */}
-      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--t-faint)', opacity: 0.4 }}>{ganzhi}</div>
+      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--t-faint)', opacity: 0.75 }}>{ganzhi}</div>
 
       {/* 主星 */}
       <div className="flex flex-col gap-0.5 flex-1">
         {majorStars.length === 0 && (
-          <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.3 }}>空宫</span>
+          <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>空宫</span>
         )}
         {majorStars.map((star) => (
           <div
@@ -138,12 +145,6 @@ export default function PalaceCell({
         </div>
       )}
 
-      {isSelected && (
-        <motion.div
-          layoutId="selected-border"
-          className="absolute inset-0 border-2 border-amber-500/40 rounded-sm pointer-events-none"
-        />
-      )}
     </motion.div>
   );
 }
