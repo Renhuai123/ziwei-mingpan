@@ -62,7 +62,7 @@ export default function ChartBoard({ chart, onStarSelect }: ChartBoardProps) {
           const palace = palaceMap[branch];
           if (!palace) return null;
           return (
-            <div key={branch} style={{ gridRow: row, gridColumn: col }}>
+            <div key={branch} style={{ gridRow: row, gridColumn: col, background: 'var(--t-bg)' }}>
               <PalaceCell
                 palace={palace}
                 onClick={() => handlePalaceClick(branch)}
