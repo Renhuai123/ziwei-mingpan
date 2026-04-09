@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── 主题 CSS 变量 ──────────────────────────────────────── */
+:root {
+  --font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --font-serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+
+  /* 暗色主题（默认） */
+  --t-bg:          #020810;
+  --t-surface:     #060c1a;
+  --t-card:        #040a14;
+  --t-border:      rgba(15, 34, 64, 0.6);
+  --t-border-acc:  rgba(180, 130, 40, 0.25);
+  --t-text:        #e2e8f0;
+  --t-text2:       #64748b;
+  --t-text3:       #334155;
+  --t-faint:       #1e3550;
+  --t-gold:        #d4a843;
+  --t-gold2:       #f0d070;
+  --t-gold-dim:    #8a6a20;
+  --t-gold-grad:   linear-gradient(160deg, #c8993a 0%, #f0d070 40%, #c8993a 70%, #f0c755 100%);
+  --t-line:        rgba(180, 130, 40, 0.35);
+  --t-star-color:  rgba(200, 220, 255, 1);
+  --t-star-opacity: 0.4;
+  --t-nav-bg:      rgba(2, 8, 16, 0.82);
+  --t-glow1:       rgba(180, 130, 40, 0.05);
+  --t-glow2:       rgba(30, 60, 120, 0.08);
+  --t-glow3:       rgba(100, 40, 160, 0.06);
+  --t-feature-bg:  rgba(6, 12, 26, 0.6);
+  --t-ni-bg:       rgba(180, 130, 40, 0.04);
+  --t-cta-text:    #080808;
+}
+
+/* ─── 亮色主题 ───────────────────────────────────────────── */
+[data-theme="light"] {
+  --t-bg:          #f8f3e8;
+  --t-surface:     #f0e8d4;
+  --t-card:        #ebe0c8;
+  --t-border:      rgba(160, 128, 50, 0.25);
+  --t-border-acc:  rgba(140, 100, 20, 0.35);
+  --t-text:        #1c1407;
+  --t-text2:       #5a4520;
+  --t-text3:       #7a6640;
+  --t-faint:       #a09060;
+  --t-gold:        #7a5208;
+  --t-gold2:       #9a6810;
+  --t-gold-dim:    #c4a060;
+  --t-gold-grad:   linear-gradient(160deg, #6a4206 0%, #9a6810 40%, #6a4206 70%, #885010 100%);
+  --t-line:        rgba(140, 100, 20, 0.4);
+  --t-star-color:  rgba(180, 140, 40, 1);
+  --t-star-opacity: 0.25;
+  --t-nav-bg:      rgba(248, 243, 232, 0.88);
+  --t-glow1:       rgba(180, 140, 40, 0.06);
+  --t-glow2:       rgba(160, 120, 30, 0.05);
+  --t-glow3:       rgba(120, 80, 20, 0.04);
+  --t-feature-bg:  rgba(235, 224, 200, 0.7);
+  --t-ni-bg:       rgba(180, 140, 40, 0.06);
+  --t-cta-text:    #f8f3e8;
+}
+
+/* ─── 主题切换全局过渡 ───────────────────────────────────── */
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    color 0.38s ease,
+    background-color 0.38s ease,
+    border-color 0.38s ease,
+    box-shadow 0.38s ease,
+    opacity 0.38s ease !important;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background-color: var(--t-bg);
+  transition: background-color 0.35s ease;
+}
+
+body {
+  background-color: var(--t-bg);
+  color: var(--t-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--t-bg); }
+::-webkit-scrollbar-thumb { background: var(--t-border-acc); border-radius: 2px; }
+
+/* 选中文字 */
+::selection {
+  background: rgba(180, 130, 40, 0.2);
+  color: var(--t-gold2);
+}
+
+/* ─── 渐变文字 — 统一用 CSS 类，避免 framer-motion 内联样式干扰 ── */
+.grad-text {
+  background: var(--t-gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;                /* 非 webkit 兼容 */
+  /* 只过渡不影响 clip 的属性 */
+  transition: opacity 0.35s ease;
+}
+
+/* 暗色渐变（固定，不随主题变） */
+.grad-text-dark {
+  background: linear-gradient(160deg, #c8993a 0%, #f0d070 40%, #c8993a 70%, #f0c755 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* 亮色渐变 */
+.grad-text-light {
+  background: linear-gradient(160deg, #6a4206 0%, #9a6a10 40%, #6a4206 70%, #885010 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
