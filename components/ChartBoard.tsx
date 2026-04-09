@@ -171,27 +171,36 @@ export default function ChartBoard({ chart, onStarSelect }: ChartBoardProps) {
                 style={{ display: 'block' }}
               >
                 {(() => {
-                  // 按顺时针排列四个宫位，连成封闭四边形
-                  const sorted = sortClockwise([...sanFangBranches]);
-                  const pts = sorted.map(b => BRANCH_SVG_POS[b]);
-                  // 4条边 + 闭合
-                  const lines: [number, number, number, number][] = [];
-                  for (let i = 0; i < 4; i++) {
-                    const a = pts[i];
-                    const b = pts[(i + 1) % 4];
-                    lines.push([a[0], a[1], b[0], b[1]]);
-                  }
+                  // 两条交叉线：本宫↔对宫，三合1↔三合2
+                  const p0 = BRANCH_SVG_POS[sanFangBranches[0]]; // 本宫
+                  const p1 = BRANCH_SVG_POS[sanFangBranches[1]]; // 对宫
+                  const p2 = BRANCH_SVG_POS[sanFangBranches[2]]; // 三合1
+                  const p3 = BRANCH_SVG_POS[sanFangBranches[3]]; // 三合2
                   return (
                     <>
-                      {lines.map(([x1, y1, x2, y2], i) => (
-                        <line
+                      {/* 本宫 ↔ 对宫 */}
+                      <line
+                        x1={`${p0[0]}%`} y1={`${p0[1]}%`}
+                        x2={`${p1[0]}%`} y2={`${p1[1]}%`}
+                        stroke="rgba(220,80,60,0.45)"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                      {/* 三合1 ↔ 三合2 */}
+                      <line
+                        x1={`${p2[0]}%`} y1={`${p2[1]}%`}
+                        x2={`${p3[0]}%`} y2={`${p3[1]}%`}
+                        stroke="rgba(220,80,60,0.45)"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                      {/* 四个宫位中心标记点 */}
+                      {[p0, p1, p2, p3].map((p, i) => (
+                        <circle
                           key={i}
-                          x1={`${x1}%`} y1={`${y1}%`}
-                          x2={`${x2}%`} y2={`${y2}%`}
-                          stroke="rgba(220,80,60,0.55)"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                          cx={`${p[0]}%`} cy={`${p[1]}%`}
+                          r="3"
+                          fill={i === 0 ? 'rgba(220,80,60,0.7)' : 'rgba(220,80,60,0.4)'}
                         />
                       ))}
                     </>
