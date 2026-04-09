@@ -6,9 +6,25 @@ import { SHICHEN } from '@/lib/ziwei/constants';
 import { useTheme } from '@/components/ThemeProvider';
 import { PROVINCES } from '@/lib/ziwei/cities';
 
+export interface BirthFormState {
+  name: string;
+  year: string;
+  month: string;
+  day: string;
+  clockHour: string;
+  clockMinute: string;
+  unknownTime: boolean;
+  province: string;
+  city: string;
+  longitude: number;
+  gender: 'male' | 'female';
+}
+
 interface BirthFormProps {
   onSubmit: (info: BirthInfo) => void;
   loading?: boolean;
+  initialData?: Partial<BirthFormState>;
+  onFormSave?: (data: BirthFormState) => void;
 }
 
 const SHICHEN_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
@@ -22,22 +38,22 @@ function calcTrueSolarBranch(clockHour: number, clockMinute: number, longitude: 
   return Math.floor((solar - 60) / 120) + 1;
 }
 
-export default function BirthForm({ onSubmit, loading }: BirthFormProps) {
+export default function BirthForm({ onSubmit, loading, initialData, onFormSave }: BirthFormProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const [form, setForm] = useState({
-    name: '',
-    year: '',
-    month: '',
-    day: '',
-    clockHour: '8',
-    clockMinute: '0',
-    unknownTime: false,
-    province: '',
-    city: '',
-    longitude: 120,
-    gender: 'male' as 'male' | 'female',
+  const [form, setForm] = useState<BirthFormState>({
+    name: initialData?.name ?? '',
+    year: initialData?.year ?? '',
+    month: initialData?.month ?? '',
+    day: initialData?.day ?? '',
+    clockHour: initialData?.clockHour ?? '8',
+    clockMinute: initialData?.clockMinute ?? '0',
+    unknownTime: initialData?.unknownTime ?? false,
+    province: initialData?.province ?? '',
+    city: initialData?.city ?? '',
+    longitude: initialData?.longitude ?? 120,
+    gender: initialData?.gender ?? 'male',
   });
 
   // 根据省份动态生成城市列表
@@ -82,6 +98,7 @@ export default function BirthForm({ onSubmit, loading }: BirthFormProps) {
     const m = parseInt(form.month);
     const d = parseInt(form.day);
     if (!y || !m || !d || y < 1900 || y > 2050) return;
+    onFormSave?.({ ...form });
     onSubmit({
       year: y, month: m, day: d,
       hour: branch,

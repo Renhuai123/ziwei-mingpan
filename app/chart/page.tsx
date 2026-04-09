@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import StarField from '@/components/StarField';
-import BirthForm from '@/components/BirthForm';
+import BirthForm, { type BirthFormState } from '@/components/BirthForm';
 import { useTheme } from '@/components/ThemeProvider';
 import ChartBoard from '@/components/ChartBoard';
 import ChartSummary from '@/components/ChartSummary';
@@ -57,6 +57,8 @@ export default function ChartPage() {
   const [selectedStar, setSelectedStar] = useState<Star | null>(null);
   const [selectedStarPalace, setSelectedStarPalace] = useState<string>('');
   const [rightPanel, setRightPanel] = useState<'ai' | 'detail' | 'fengshui'>('ai');
+  const [savedForm, setSavedForm] = useState<BirthFormState | null>(null);
+  const [formKey, setFormKey] = useState(0);
 
   const isDark = theme === 'dark';
 
@@ -89,11 +91,27 @@ export default function ChartPage() {
     setRightPanel('detail');
   };
 
+  const handleBack = () => {
+    if (chart) {
+      // 从命盘回到起盘表单（保留数据）
+      setChart(null);
+      setError('');
+      setSelectedStar(null);
+      setRightPanel('ai');
+      setFormKey(k => k + 1); // 用新key重新挂载BirthForm使initialData生效
+    } else {
+      // 从表单回到首页
+      router.push('/');
+    }
+  };
+
   const handleReset = () => {
     setChart(null);
     setError('');
     setSelectedStar(null);
     setRightPanel('ai');
+    setSavedForm(null);
+    setFormKey(k => k + 1);
   };
 
   const TABS = [
@@ -124,14 +142,14 @@ export default function ChartPage() {
           }}
         >
           <motion.button
-            onClick={() => router.push('/')}
+            onClick={handleBack}
             whileHover={{ x: -2 }}
             transition={{ duration: 0.15 }}
             className="flex items-center gap-1.5 text-xs"
             style={{ color: 'var(--t-faint)' }}
           >
             <span className="text-base leading-none">‹</span>
-            <span className="tracking-wide">返回</span>
+            <span className="tracking-wide">{chart ? '修改信息' : '返回首页'}</span>
           </motion.button>
 
           <div className="flex items-center gap-2">
@@ -180,7 +198,13 @@ export default function ChartPage() {
                   </h1>
                   <p className="text-[11px]" style={{ color: 'var(--t-faint)' }}>输入出生年月日时 · 以公历为准</p>
                 </div>
-                <BirthForm onSubmit={handleSubmit} loading={loading} />
+                <BirthForm
+                  key={formKey}
+                  onSubmit={handleSubmit}
+                  loading={loading}
+                  initialData={savedForm ?? undefined}
+                  onFormSave={setSavedForm}
+                />
                 {error && (
                   <motion.div
                     initial={{ opacity: 0 }}
