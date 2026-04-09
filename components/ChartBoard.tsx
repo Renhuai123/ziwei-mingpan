@@ -25,6 +25,18 @@ const BRANCH_SVG_POS: Record<number, [number, number]> = {
   2: [12.5, 87.5], 1: [37.5, 87.5], 0: [62.5, 87.5], 11: [87.5, 87.5],
 };
 
+// 绕盘面顺时针排列（用于三方四正四边形排序）
+const CLOCKWISE_INDEX: Record<number, number> = {
+  5: 0, 6: 1, 7: 2, 8: 3,
+  9: 4, 10: 5,
+  11: 6, 0: 7, 1: 8, 2: 9,
+  3: 10, 4: 11,
+};
+
+function sortClockwise(branches: number[]): number[] {
+  return [...branches].sort((a, b) => CLOCKWISE_INDEX[a] - CLOCKWISE_INDEX[b]);
+}
+
 /** 三方四正：本宫 + 对宫 + 两个三合宫 */
 function getSanFangSiZheng(branch: number): [number, number, number, number] {
   return [
@@ -159,50 +171,29 @@ export default function ChartBoard({ chart, onStarSelect }: ChartBoardProps) {
                 style={{ display: 'block' }}
               >
                 {(() => {
-                  const [selB, oppB, tri1B, tri2B] = sanFangBranches;
-                  const sel = BRANCH_SVG_POS[selB];
-                  const opp = BRANCH_SVG_POS[oppB];
-                  const tri1 = BRANCH_SVG_POS[tri1B];
-                  const tri2 = BRANCH_SVG_POS[tri2B];
+                  // 按顺时针排列四个宫位，连成封闭四边形
+                  const sorted = sortClockwise([...sanFangBranches]);
+                  const pts = sorted.map(b => BRANCH_SVG_POS[b]);
+                  // 4条边 + 闭合
+                  const lines: [number, number, number, number][] = [];
+                  for (let i = 0; i < 4; i++) {
+                    const a = pts[i];
+                    const b = pts[(i + 1) % 4];
+                    lines.push([a[0], a[1], b[0], b[1]]);
+                  }
                   return (
                     <>
-                      {/* 连线：本宫 ↔ 对宫 */}
-                      <line
-                        x1={`${sel[0]}%`} y1={`${sel[1]}%`}
-                        x2={`${opp[0]}%`} y2={`${opp[1]}%`}
-                        stroke="rgba(212,168,67,0.55)"
-                        strokeWidth="2"
-                        strokeDasharray="8 5"
-                        strokeLinecap="round"
-                      />
-                      {/* 连线：三合1 ↔ 三合2 */}
-                      <line
-                        x1={`${tri1[0]}%`} y1={`${tri1[1]}%`}
-                        x2={`${tri2[0]}%`} y2={`${tri2[1]}%`}
-                        stroke="rgba(212,168,67,0.55)"
-                        strokeWidth="2"
-                        strokeDasharray="8 5"
-                        strokeLinecap="round"
-                      />
-                      {/* 中心交汇点 */}
-                      <circle cx="50%" cy="50%" r="4" fill="rgba(212,168,67,0.3)" />
-                      {/* 四个端点空心圆环 */}
-                      {[sel, opp, tri1, tri2].map(([x, y], i) => (
-                        <circle
+                      {lines.map(([x1, y1, x2, y2], i) => (
+                        <line
                           key={i}
-                          cx={`${x}%`} cy={`${y}%`}
-                          r="5"
-                          fill="none"
-                          stroke="rgba(212,168,67,0.5)"
-                          strokeWidth="2"
+                          x1={`${x1}%`} y1={`${y1}%`}
+                          x2={`${x2}%`} y2={`${y2}%`}
+                          stroke="rgba(220,80,60,0.55)"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
                       ))}
-                      {/* 选中宫位实心圆 */}
-                      <circle
-                        cx={`${sel[0]}%`} cy={`${sel[1]}%`}
-                        r="4"
-                        fill="rgba(212,168,67,0.65)"
-                      />
                     </>
                   );
                 })()}
