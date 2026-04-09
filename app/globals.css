@@ -127,3 +127,21 @@ body {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
+/* ─── 主题感知工具类 ─────────────────────────────────────── */
+.card-glass {
+  background: var(--t-surface);
+  border: 1px solid var(--t-border);
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+[data-theme="light"] .card-glass {
+  box-shadow: 0 2px 16px rgba(160, 120, 30, 0.08);
+}
+.card-inner {
+  background: var(--t-card);
+  border: 1px solid var(--t-border);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+[data-theme="light"] .card-inner {
+  box-shadow: 0 1px 4px rgba(160, 120, 30, 0.06);
+}

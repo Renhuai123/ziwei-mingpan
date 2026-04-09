@@ -14,14 +14,14 @@ interface PalaceCellProps {
 
 const SiHuaBadge = ({ siHua }: { siHua: string }) => {
   const styles: Record<string, string> = {
-    '禄': 'text-emerald-400 bg-emerald-900/30 border-emerald-700/40',
-    '权': 'text-blue-400 bg-blue-900/30 border-blue-700/40',
-    '科': 'text-yellow-400 bg-yellow-900/30 border-yellow-700/40',
-    '忌': 'text-red-400 bg-red-900/30 border-red-700/40',
+    '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+    '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
+    '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
+    '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
   };
   return (
     <span className={clsx(
-      'inline-flex items-center text-[8px] px-0.5 rounded border leading-none py-px font-medium ml-0.5 flex-shrink-0',
+      'inline-flex items-center text-[8px] px-1 rounded-full border leading-none py-px font-bold ml-1 flex-shrink-0',
       styles[siHua]
     )}>
       {siHua}
@@ -45,52 +45,59 @@ export default function PalaceCell({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.35, delay, ease: 'easeOut' }}
       onClick={onClick}
-      className={clsx(
-        'relative flex flex-col p-1.5 cursor-pointer transition-all duration-200',
-        'border',
-        isCurrentDaXian
-          ? 'bg-purple-950/40 border-purple-700/40 ring-1 ring-purple-600/30 ring-inset'
+      className="relative flex flex-col p-1.5 cursor-pointer transition-all duration-200"
+      style={{
+        minHeight: '90px',
+        background: isCurrentDaXian
+          ? 'rgba(147,51,234,0.08)'
           : isSelected
-          ? 'bg-amber-950/30 border-amber-600/50'
+          ? 'rgba(212,168,67,0.06)'
           : isMingGong
-          ? 'bg-amber-950/20 border-amber-800/40 hover:border-amber-600/50'
-          : 'bg-[#070e1c] border-[#0f2240]/60 hover:border-[#1a3a60]/80 hover:bg-[#090f1e]',
-      )}
-      style={{ minHeight: '90px' }}
+          ? 'rgba(212,168,67,0.04)'
+          : 'var(--t-bg)',
+        borderLeft: isCurrentDaXian
+          ? '2px solid rgba(147,51,234,0.4)'
+          : isMingGong
+          ? '2px solid rgba(212,168,67,0.3)'
+          : '2px solid transparent',
+      }}
     >
-      {/* 大限年龄 — 右上角 */}
+      {/* 大限年龄 */}
       {daXianAge && (
         <div className={clsx(
           'absolute top-1 right-1 text-[9px] font-mono tabular-nums',
-          isCurrentDaXian ? 'text-purple-400' : 'text-[#1e3850]'
-        )}>
+          isCurrentDaXian ? 'text-purple-400' : ''
+        )}
+          style={!isCurrentDaXian ? { color: 'var(--t-faint)', opacity: 0.5 } : undefined}
+        >
           {daXianAge[0]}–{daXianAge[1]}
         </div>
       )}
 
       {/* 宫名行 */}
-      <div className="flex items-center gap-0.5 mb-0.5 pr-8">
-        <span className={clsx(
-          'text-[10px] font-medium tracking-wide',
-          isMingGong ? 'text-amber-400' : isShenGong ? 'text-sky-400' : 'text-[#2a5070]'
-        )}>
+      <div className="flex items-center gap-1 mb-0.5 pr-8">
+        <span className={clsx('text-[10px] font-medium tracking-wide',
+          isMingGong ? 'text-amber-500' : isShenGong ? 'text-sky-500' : ''
+        )}
+          style={!isMingGong && !isShenGong ? { color: 'var(--t-faint)' } : undefined}
+        >
           {name}
         </span>
         {isMingGong && (
-          <span className="text-[7px] text-amber-400/70 border border-amber-700/40 px-0.5 rounded leading-tight">命</span>
+          <span className="text-[7px] text-amber-500/80 border border-amber-500/30 px-0.5 rounded leading-tight">命</span>
         )}
         {isShenGong && (
-          <span className="text-[7px] text-sky-400/70 border border-sky-700/40 px-0.5 rounded leading-tight">身</span>
+          <span className="text-[7px] text-sky-500/80 border border-sky-500/30 px-0.5 rounded leading-tight">身</span>
         )}
       </div>
 
       {/* 干支 */}
-      <div className="text-[9px] text-[#1a3050] font-mono mb-1">{ganzhi}</div>
+      <div className="text-[9px] font-mono mb-1" style={{ color: 'var(--t-faint)', opacity: 0.4 }}>{ganzhi}</div>
 
-      {/* 主星区域 */}
+      {/* 主星 */}
       <div className="flex flex-col gap-0.5 flex-1">
         {majorStars.length === 0 && (
-          <span className="text-[10px] text-[#0f1e30] italic">空宫</span>
+          <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.3 }}>空宫</span>
         )}
         {majorStars.map((star) => (
           <div
@@ -100,11 +107,7 @@ export default function PalaceCell({
           >
             <span className={clsx(
               'text-[13px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all',
-              star.brightness === 'bright'
-                ? 'text-amber-300'
-                : star.brightness === 'dim'
-                ? 'text-amber-700/80'
-                : 'text-amber-400',
+              star.brightness === 'bright' ? 'text-amber-300' : star.brightness === 'dim' ? 'text-amber-700/80' : 'text-amber-500',
             )}>
               {star.name}
             </span>
@@ -113,33 +116,32 @@ export default function PalaceCell({
         ))}
       </div>
 
-      {/* 吉星行 */}
+      {/* 吉星 */}
       {luckyStars.length > 0 && (
         <div className="flex flex-wrap gap-x-1 mt-0.5">
           {luckyStars.map(s => (
-            <span key={s.name} className="text-[9px] text-sky-600/80 leading-tight">
+            <span key={s.name} className="text-[9px] text-sky-500/70 leading-tight">
               {s.name}{s.siHua && <SiHuaBadge siHua={s.siHua} />}
             </span>
           ))}
         </div>
       )}
 
-      {/* 煞星行 */}
+      {/* 煞星 */}
       {shaStars.length > 0 && (
         <div className="flex flex-wrap gap-x-1">
           {shaStars.map(s => (
-            <span key={s.name} className="text-[9px] text-red-700/70 leading-tight">
+            <span key={s.name} className="text-[9px] text-red-500/60 leading-tight">
               {s.name}{s.siHua && <SiHuaBadge siHua={s.siHua} />}
             </span>
           ))}
         </div>
       )}
 
-      {/* 选中高亮边框 */}
       {isSelected && (
         <motion.div
           layoutId="selected-border"
-          className="absolute inset-0 border border-amber-500/50 rounded-sm pointer-events-none"
+          className="absolute inset-0 border-2 border-amber-500/40 rounded-sm pointer-events-none"
         />
       )}
     </motion.div>

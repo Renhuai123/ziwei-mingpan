@@ -21,18 +21,18 @@ function ThemeToggle() {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.93 }}
       aria-label={isDark ? '切换亮色主题' : '切换暗色主题'}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full border"
+      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
       style={{
-        borderColor: isDark ? 'rgba(212,168,67,0.3)' : 'rgba(140,100,20,0.35)',
+        borderColor: 'var(--t-border-acc)',
         background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,252,242,0.85)',
       }}
     >
-      <div className="relative w-8 h-4 rounded-full flex-shrink-0"
+      <div className="relative w-7 h-3.5 rounded-full flex-shrink-0"
         style={{ background: isDark ? 'rgba(12,24,64,0.95)' : 'rgba(230,195,80,0.55)' }}>
         <motion.div
-          animate={{ x: isDark ? 2 : 16 }}
+          animate={{ x: isDark ? 1 : 14 }}
           transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-          className="absolute top-0.5 w-3 h-3 rounded-full"
+          className="absolute top-[3px] w-2.5 h-2.5 rounded-full"
           style={{
             background: isDark
               ? 'linear-gradient(135deg, #b8a050, #e8d090)'
@@ -41,8 +41,8 @@ function ThemeToggle() {
         />
       </div>
       <span className="text-[10px] font-medium tracking-wide select-none"
-        style={{ color: isDark ? 'rgba(212,180,100,0.85)' : 'rgba(110,72,8,0.8)' }}>
-        {isDark ? '🌙' : '☀️'}
+        style={{ color: 'var(--t-gold)' }}>
+        {isDark ? '暗色' : '亮色'}
       </span>
     </motion.button>
   );
@@ -56,8 +56,9 @@ export default function ChartPage() {
   const [error, setError] = useState('');
   const [selectedStar, setSelectedStar] = useState<Star | null>(null);
   const [selectedStarPalace, setSelectedStarPalace] = useState<string>('');
-  // 右侧面板模式: 'ai' | 'detail' | 'fengshui'
   const [rightPanel, setRightPanel] = useState<'ai' | 'detail' | 'fengshui'>('ai');
+
+  const isDark = theme === 'dark';
 
   const handleSubmit = async (info: BirthInfo) => {
     setLoading(true);
@@ -95,61 +96,59 @@ export default function ChartPage() {
     setRightPanel('ai');
   };
 
-  const isDark = theme === 'dark';
-  const bgBase = isDark ? '#020810' : '#f5efe0';
-  const headerBg = isDark ? 'rgba(2,8,16,0.88)' : 'rgba(250,245,235,0.92)';
-  const headerBorder = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(160,120,30,0.15)';
+  const TABS = [
+    { key: 'ai', label: 'AI 解读' },
+    { key: 'detail', label: '星曜详解' },
+    { key: 'fengshui', label: '风水补局' },
+  ] as const;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ background: bgBase, transition: 'background 0.35s ease' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ background: 'var(--t-bg)', transition: 'background 0.35s ease' }}>
       <StarField />
 
       {/* 顶部光晕 */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-900/4 rounded-full blur-[80px]" />
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-950/20 rounded-full blur-[60px]" />
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[80px]"
+          style={{ background: 'var(--t-glow1)' }} />
       </div>
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* 顶部导航 */}
-        <header className="flex items-center justify-between px-5 py-3 border-b sticky top-0 z-20"
+        {/* ─── 顶部导航 ─── */}
+        <header
+          className="flex items-center justify-between px-5 py-2.5 border-b sticky top-0 z-20"
           style={{
-            background: headerBg,
-            borderColor: headerBorder,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}>
+            background: 'var(--t-nav-bg)',
+            borderColor: 'var(--t-border)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+          }}
+        >
           <motion.button
             onClick={() => router.push('/')}
             whileHover={{ x: -2 }}
             transition={{ duration: 0.15 }}
-            className="flex items-center gap-1.5 transition-colors text-xs group"
-            style={{ color: isDark ? 'rgba(212,168,67,0.55)' : 'rgba(140,90,10,0.7)' }}
-            onMouseEnter={e => (e.currentTarget.style.color = isDark ? 'rgba(212,168,67,0.9)' : 'rgba(140,90,10,1)')}
-            onMouseLeave={e => (e.currentTarget.style.color = isDark ? 'rgba(212,168,67,0.55)' : 'rgba(140,90,10,0.7)')}
+            className="flex items-center gap-1.5 text-xs"
+            style={{ color: 'var(--t-faint)' }}
           >
             <span className="text-base leading-none">‹</span>
             <span className="tracking-wide">返回</span>
           </motion.button>
+
           <div className="flex items-center gap-2">
-            <span style={{ color: isDark ? 'rgba(212,168,67,0.4)' : 'rgba(140,90,10,0.5)' }} className="text-xs">☯</span>
-            <span className="text-xs tracking-[0.3em]" style={{ color: isDark ? 'rgba(212,168,67,0.6)' : 'rgba(120,70,8,0.8)' }}>紫微命盘</span>
+            <span style={{ color: 'var(--t-gold)', opacity: 0.4 }} className="text-xs">☯</span>
+            <span className="text-xs tracking-[0.3em]" style={{ color: 'var(--t-gold)' }}>紫微命盘</span>
           </div>
+
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            {chart ? (
+            {chart && (
               <button
                 onClick={handleReset}
-                className="text-[10px] transition-colors border px-2 py-1 rounded"
-                style={{
-                  color: isDark ? 'rgba(212,168,67,0.6)' : 'rgba(120,70,8,0.8)',
-                  borderColor: isDark ? 'rgba(212,168,67,0.2)' : 'rgba(140,90,10,0.25)',
-                }}
+                className="text-[10px] transition-colors border px-2.5 py-1 rounded-full"
+                style={{ color: 'var(--t-gold)', borderColor: 'var(--t-border-acc)', opacity: 0.8 }}
               >
                 重新起盘
               </button>
-            ) : (
-              <div className="w-16" />
             )}
           </div>
         </header>
@@ -171,23 +170,22 @@ export default function ChartPage() {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.1, type: 'spring' }}
-                    className="text-5xl mb-3 text-amber-800/30 select-none"
+                    className="text-5xl mb-3 select-none"
+                    style={{ color: 'var(--t-faint)', opacity: 0.3 }}
                   >
                     ☯
                   </motion.div>
-                  <h1 className="text-amber-400/90 text-xl tracking-[0.25em] font-medium mb-1">
+                  <h1 className="text-xl tracking-[0.25em] font-medium mb-1" style={{ color: 'var(--t-gold)' }}>
                     起紫微命盘
                   </h1>
-                  <p className="text-[11px] text-[#2a4060]">输入出生年月日时 · 以公历为准</p>
+                  <p className="text-[11px]" style={{ color: 'var(--t-faint)' }}>输入出生年月日时 · 以公历为准</p>
                 </div>
-
                 <BirthForm onSubmit={handleSubmit} loading={loading} />
-
                 {error && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="mt-3 p-3 bg-red-950/20 border border-red-800/30 rounded text-red-400/80 text-xs text-center"
+                    className="mt-3 p-3 bg-red-950/20 border border-red-800/30 rounded-xl text-red-400/80 text-xs text-center"
                   >
                     {error}
                   </motion.div>
@@ -203,16 +201,12 @@ export default function ChartPage() {
                 transition={{ duration: 0.4 }}
                 className="p-3 md:p-5"
               >
-                {/* 主体三栏布局：命盘 | 摘要 | 右侧面板 */}
-                <div className="max-w-[1400px] mx-auto">
-                  <div className="grid grid-cols-1 lg:grid-cols-[minmax(480px,560px)_1fr_360px] gap-4 items-start">
+                <div className="max-w-[1440px] mx-auto">
+                  <div className="grid grid-cols-1 lg:grid-cols-[minmax(480px,560px)_1fr_380px] gap-5 items-start">
 
                     {/* ── 左栏: 命盘 ── */}
                     <div>
-                      <ChartBoard
-                        chart={chart}
-                        onStarSelect={handleStarSelect}
-                      />
+                      <ChartBoard chart={chart} onStarSelect={handleStarSelect} />
                     </div>
 
                     {/* ── 中栏: 命格摘要 ── */}
@@ -220,77 +214,67 @@ export default function ChartPage() {
                       <ChartSummary chart={chart} />
                     </div>
 
-                    {/* ── 右栏: AI解读 / 星曜详情 ── */}
-                    <div className="lg:sticky lg:top-16" style={{ height: 'calc(100vh - 80px)', maxHeight: '780px' }}>
-                      {/* 切换标签 */}
-                      <div className="flex mb-2 border border-[#0a1e38] rounded overflow-hidden">
-                        {[
-                          { key: 'ai', label: 'AI 解读' },
-                          { key: 'detail', label: '星曜详解' },
-                          { key: 'fengshui', label: '风水补局' },
-                        ].map(tab => (
-                          <button
-                            key={tab.key}
-                            onClick={() => setRightPanel(tab.key as 'ai' | 'detail' | 'fengshui')}
-                            className={`flex-1 py-1.5 text-[11px] transition-colors ${
-                              rightPanel === tab.key
-                                ? 'bg-amber-900/30 text-amber-400 border-b border-amber-700/40'
-                                : 'text-[#2a4060] hover:text-[#3a5a80]'
-                            }`}
-                          >
-                            {tab.label}
-                            {tab.key === 'detail' && selectedStar && (
-                              <span className="ml-1 text-amber-500/60">· {selectedStar.name}</span>
-                            )}
-                          </button>
-                        ))}
+                    {/* ── 右栏: AI解读 / 星曜详情 / 风水 ── */}
+                    <div className="lg:sticky lg:top-16" style={{ height: 'calc(100vh - 80px)', maxHeight: '800px' }}>
+                      {/* 切换标签 — 圆角胶囊式 */}
+                      <div
+                        className="flex mb-3 rounded-xl overflow-hidden p-1 gap-1"
+                        style={{ background: 'var(--t-surface)', border: '1px solid var(--t-border)' }}
+                      >
+                        {TABS.map(tab => {
+                          const isActive = rightPanel === tab.key;
+                          return (
+                            <button
+                              key={tab.key}
+                              onClick={() => setRightPanel(tab.key as 'ai' | 'detail' | 'fengshui')}
+                              className="relative flex-1 py-2 text-[11px] font-medium rounded-lg transition-all duration-200"
+                              style={{
+                                background: isActive
+                                  ? isDark ? 'rgba(212,168,67,0.12)' : 'rgba(180,130,40,0.12)'
+                                  : 'transparent',
+                                color: isActive ? 'var(--t-gold)' : 'var(--t-faint)',
+                                boxShadow: isActive
+                                  ? isDark
+                                    ? 'inset 0 0 0 1px rgba(212,168,67,0.2)'
+                                    : 'inset 0 0 0 1px rgba(140,100,20,0.2), 0 1px 3px rgba(0,0,0,0.05)'
+                                  : 'none',
+                              }}
+                            >
+                              {tab.label}
+                              {tab.key === 'detail' && selectedStar && (
+                                <span className="ml-1 opacity-60">· {selectedStar.name}</span>
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
 
-                      <div className="h-[calc(100%-36px)]">
+                      <div className="h-[calc(100%-52px)]">
                         <AnimatePresence mode="wait">
                           {rightPanel === 'ai' ? (
-                            <motion.div
-                              key="ai"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="h-full"
-                            >
+                            <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
                               <ChatPanel chart={chart} />
                             </motion.div>
                           ) : rightPanel === 'fengshui' ? (
-                            <motion.div
-                              key="fengshui"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="h-full"
-                            >
+                            <motion.div key="fengshui" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
                               <FengShuiPanel chart={chart} />
                             </motion.div>
                           ) : (
-                            <motion.div
-                              key="detail"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="h-full overflow-y-auto"
-                            >
+                            <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full overflow-y-auto">
                               {selectedStar ? (
                                 <StarDetailPanel
                                   star={selectedStar}
                                   palaceName={selectedStarPalace}
-                                  onClose={() => {
-                                    setSelectedStar(null);
-                                    setRightPanel('ai');
-                                  }}
+                                  onClose={() => { setSelectedStar(null); setRightPanel('ai'); }}
                                 />
                               ) : (
-                                <div className="h-full flex flex-col items-center justify-center text-center p-8 border border-[#0a1e38] rounded-lg bg-[#060c1a]">
-                                  <div className="text-4xl text-amber-900/20 mb-4">✦</div>
-                                  <p className="text-[#1e3550] text-xs leading-relaxed">
+                                <div
+                                  className="h-full flex flex-col items-center justify-center text-center p-8 rounded-xl card-glass"
+                                >
+                                  <div className="text-4xl mb-4" style={{ color: 'var(--t-gold)', opacity: 0.15 }}>✦</div>
+                                  <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
                                     点击命盘中任意<br />
-                                    <span className="text-amber-800/50">主星名字</span>
+                                    <span style={{ color: 'var(--t-gold)', opacity: 0.7 }}>主星名字</span>
                                     <br />查看倪海夏详细解读
                                   </p>
                                 </div>

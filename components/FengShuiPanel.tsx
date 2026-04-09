@@ -3,15 +3,12 @@ import { motion } from 'framer-motion';
 import { analyzeFengshui } from '@/lib/ziwei/fengshui';
 import type { ZiweiChart } from '@/lib/ziwei/types';
 
-const ELEMENT_ICON: Record<string, string> = {
-  '水': '💧', '火': '🔥', '木': '🌿', '金': '⚙️', '土': '🪨',
-};
-const ELEMENT_COLOR: Record<string, { bg: string; border: string; text: string }> = {
-  '水': { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.3)', text: '#60a5fa' },
-  '火': { bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.3)', text: '#f87171' },
-  '木': { bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.3)', text: '#4ade80' },
-  '金': { bg: 'rgba(234,179,8,0.08)', border: 'rgba(234,179,8,0.3)', text: '#facc15' },
-  '土': { bg: 'rgba(217,119,6,0.08)', border: 'rgba(217,119,6,0.3)', text: '#fbbf24' },
+const ELEMENT_COLOR: Record<string, { bg: string; border: string; text: string; bar: string }> = {
+  '水': { bg: 'rgba(59,130,246,0.06)', border: 'rgba(59,130,246,0.2)', text: '#60a5fa', bar: '#3b82f6' },
+  '火': { bg: 'rgba(239,68,68,0.06)', border: 'rgba(239,68,68,0.2)', text: '#f87171', bar: '#ef4444' },
+  '木': { bg: 'rgba(34,197,94,0.06)', border: 'rgba(34,197,94,0.2)', text: '#4ade80', bar: '#22c55e' },
+  '金': { bg: 'rgba(234,179,8,0.06)', border: 'rgba(234,179,8,0.2)', text: '#facc15', bar: '#eab308' },
+  '土': { bg: 'rgba(217,119,6,0.06)', border: 'rgba(217,119,6,0.2)', text: '#fbbf24', bar: '#d97706' },
 };
 
 export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
@@ -20,21 +17,19 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
   const maxCount = Math.max(...Object.values(result.elementCounts), 1);
 
   return (
-    <div className="h-full overflow-y-auto p-4 space-y-5"
-      style={{ scrollbarWidth: 'thin' }}>
-
+    <div className="h-full overflow-y-auto p-4 space-y-5 card-glass rounded-xl" style={{ scrollbarWidth: 'thin' }}>
       {/* 标题 */}
       <div>
-        <div className="text-[10px] tracking-[0.4em] text-amber-700/50 mb-1">FENG SHUI · 风水补局</div>
-        <div className="text-xs text-amber-600/60 leading-relaxed">
-          根据命盘三方四正的五行分布，为你定制风水补局方案，裨补阙漏、强化弱项。
+        <div className="text-[10px] tracking-[0.4em] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>FENG SHUI · 风水补局</div>
+        <div className="text-xs leading-relaxed" style={{ color: 'var(--t-text2)' }}>
+          根据命盘三方四正的五行分布，为你定制风水补局方案。
         </div>
       </div>
 
       {/* 五行分布 */}
-      <div className="rounded-lg border border-[#0a1e38] bg-[#040a14] p-4">
-        <div className="text-[9px] tracking-[0.4em] text-[#1e3550] mb-3">五行分布</div>
-        <div className="space-y-2">
+      <div className="card-inner rounded-lg p-4">
+        <div className="text-[9px] tracking-[0.4em] mb-3" style={{ color: 'var(--t-faint)' }}>五行分布</div>
+        <div className="space-y-2.5">
           {ALL_ELEMENTS.map(el => {
             const count = result.elementCounts[el];
             const pct = maxCount > 0 ? (count / maxCount) * 100 : 0;
@@ -43,32 +38,26 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
             const isStrong = result.strongElements.includes(el);
             const c = ELEMENT_COLOR[el];
             return (
-              <div key={el} className="flex items-center gap-2">
-                <span className="text-[11px] w-4 text-center">{ELEMENT_ICON[el]}</span>
-                <span className="text-[11px] w-4 transition-colors"
-                  style={{ color: c.text }}>{el}</span>
-                <div className="flex-1 h-1.5 rounded-full bg-[#0a1e38] overflow-hidden">
+              <div key={el} className="flex items-center gap-2.5">
+                <span className="text-[11px] w-4 text-center font-medium" style={{ color: c.text }}>{el}</span>
+                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'var(--t-border)' }}>
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${pct}%` }}
                     transition={{ duration: 0.8, delay: 0.1 }}
                     className="h-full rounded-full"
-                    style={{ background: c.border }}
+                    style={{ background: c.bar }}
                   />
                 </div>
-                <span className="text-[10px] w-4 text-right"
-                  style={{ color: c.text, opacity: 0.7 }}>{count}</span>
+                <span className="text-[10px] w-4 text-right tabular-nums" style={{ color: c.text, opacity: 0.8 }}>{count}</span>
                 {isMissing && (
-                  <span className="text-[9px] px-1 rounded"
-                    style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171' }}>缺</span>
+                  <span className="text-[9px] px-1.5 py-px rounded-full font-medium" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171' }}>缺</span>
                 )}
                 {isWeak && (
-                  <span className="text-[9px] px-1 rounded"
-                    style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c' }}>弱</span>
+                  <span className="text-[9px] px-1.5 py-px rounded-full font-medium" style={{ background: 'rgba(251,146,60,0.12)', color: '#fb923c' }}>弱</span>
                 )}
                 {isStrong && (
-                  <span className="text-[9px] px-1 rounded"
-                    style={{ background: 'rgba(34,197,94,0.12)', color: '#4ade80' }}>旺</span>
+                  <span className="text-[9px] px-1.5 py-px rounded-full font-medium" style={{ background: 'rgba(34,197,94,0.1)', color: '#4ade80' }}>旺</span>
                 )}
               </div>
             );
@@ -79,7 +68,7 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
       {/* 补局建议 */}
       {result.remedies.length > 0 ? (
         <div className="space-y-3">
-          <div className="text-[9px] tracking-[0.4em] text-[#1e3550]">
+          <div className="text-[9px] tracking-[0.4em]" style={{ color: 'var(--t-faint)' }}>
             {result.remedies.some(r => r.level === 'missing') ? '缺失五行 · 重点补局' : '偏弱五行 · 建议补局'}
           </div>
           {result.remedies.map((remedy, i) => {
@@ -90,82 +79,64 @@ export default function FengShuiPanel({ chart }: { chart: ZiweiChart }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="rounded-lg p-4"
+                className="rounded-xl p-4"
                 style={{ background: c.bg, border: `1px solid ${c.border}` }}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">{ELEMENT_ICON[remedy.element]}</span>
-                  <div>
-                    <span className="text-[11px] font-medium" style={{ color: c.text }}>
-                      缺{remedy.element}
-                    </span>
-                    <span className="text-[9px] ml-2 opacity-60" style={{ color: c.text }}>
-                      {remedy.level === 'missing' ? '完全缺失' : '偏弱'}
-                    </span>
-                  </div>
-                  <div className="ml-auto text-[9px] opacity-60" style={{ color: c.text }}>
+                  <span className="text-[13px] font-bold" style={{ color: c.text }}>{remedy.element}</span>
+                  <span className="text-[9px]" style={{ color: c.text, opacity: 0.6 }}>
+                    {remedy.level === 'missing' ? '完全缺失' : '偏弱'}
+                  </span>
+                  <div className="ml-auto text-[9px]" style={{ color: c.text, opacity: 0.6 }}>
                     吉位：{remedy.direction}
                   </div>
                 </div>
-
-                <p className="text-[10px] text-[#334155] leading-relaxed mb-3">{remedy.desc}</p>
-
+                <p className="text-[10px] leading-relaxed mb-3" style={{ color: 'var(--t-text2)' }}>{remedy.desc}</p>
                 <div className="space-y-1.5">
-                  <div>
-                    <span className="text-[9px] text-[#1e3550] tracking-wider">推荐摆件：</span>
-                    <span className="text-[10px] ml-1" style={{ color: c.text, opacity: 0.9 }}>
-                      {remedy.items.join('、')}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[9px] text-[#1e3550] tracking-wider">颜色调和：</span>
-                    <span className="text-[10px] ml-1" style={{ color: c.text, opacity: 0.9 }}>
-                      {remedy.colors.join('、')}
-                    </span>
-                  </div>
-                  {remedy.plants && (
-                    <div>
-                      <span className="text-[9px] text-[#1e3550] tracking-wider">推荐植物：</span>
-                      <span className="text-[10px] ml-1" style={{ color: c.text, opacity: 0.9 }}>
-                        {remedy.plants.join('、')}
-                      </span>
+                  {[
+                    { label: '推荐摆件', value: remedy.items.join('、') },
+                    { label: '颜色调和', value: remedy.colors.join('、') },
+                    ...(remedy.plants ? [{ label: '推荐植物', value: remedy.plants.join('、') }] : []),
+                  ].map(item => (
+                    <div key={item.label}>
+                      <span className="text-[9px] tracking-wider" style={{ color: 'var(--t-faint)' }}>{item.label}：</span>
+                      <span className="text-[10px] ml-1" style={{ color: c.text, opacity: 0.9 }}>{item.value}</span>
                     </div>
-                  )}
+                  ))}
                 </div>
               </motion.div>
             );
           })}
         </div>
       ) : (
-        <div className="rounded-lg border border-[#0a1e38] bg-[#040a14] p-4 text-center">
-          <div className="text-amber-500/30 text-2xl mb-2">✦</div>
-          <p className="text-[11px] text-amber-700/50">五行较为均衡，无需特别补局</p>
-          <p className="text-[10px] text-[#1e3550] mt-1">保持现有居家环境即可</p>
+        <div className="card-inner rounded-xl p-5 text-center">
+          <div className="text-2xl mb-2" style={{ color: 'var(--t-gold)', opacity: 0.2 }}>✦</div>
+          <p className="text-[11px]" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>五行较为均衡，无需特别补局</p>
+          <p className="text-[10px] mt-1" style={{ color: 'var(--t-faint)' }}>保持现有居家环境即可</p>
         </div>
       )}
 
       {/* 本命吉位 */}
-      <div className="rounded-lg border border-[#0a1e38] bg-[#040a14] p-4">
-        <div className="text-[9px] tracking-[0.4em] text-[#1e3550] mb-3">本命吉位</div>
+      <div className="card-inner rounded-xl p-4">
+        <div className="text-[9px] tracking-[0.4em] mb-3" style={{ color: 'var(--t-faint)' }}>本命吉位</div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="text-center p-3 rounded"
-            style={{ background: 'rgba(180,130,40,0.06)', border: '1px solid rgba(180,130,40,0.2)' }}>
-            <div className="text-[9px] text-amber-700/50 mb-1">主吉方</div>
-            <div className="text-base font-bold text-amber-400/80">{result.auspiciousDir.main}</div>
+          <div className="text-center p-3.5 rounded-xl"
+            style={{ background: 'rgba(212,168,67,0.06)', border: '1px solid rgba(212,168,67,0.15)' }}>
+            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>主吉方</div>
+            <div className="text-lg font-bold" style={{ color: 'var(--t-gold)' }}>{result.auspiciousDir.main}</div>
           </div>
-          <div className="text-center p-3 rounded"
-            style={{ background: 'rgba(180,130,40,0.04)', border: '1px solid rgba(180,130,40,0.15)' }}>
-            <div className="text-[9px] text-amber-700/50 mb-1">辅吉方</div>
-            <div className="text-base font-bold text-amber-600/60">{result.auspiciousDir.sub}</div>
+          <div className="text-center p-3.5 rounded-xl"
+            style={{ background: 'rgba(212,168,67,0.04)', border: '1px solid rgba(212,168,67,0.1)' }}>
+            <div className="text-[9px] mb-1" style={{ color: 'var(--t-gold)', opacity: 0.4 }}>辅吉方</div>
+            <div className="text-lg font-bold" style={{ color: 'var(--t-gold)', opacity: 0.6 }}>{result.auspiciousDir.sub}</div>
           </div>
         </div>
-        <p className="text-[10px] text-[#1e3550] mt-3 leading-relaxed text-center">
+        <p className="text-[10px] mt-3 leading-relaxed text-center" style={{ color: 'var(--t-faint)' }}>
           书桌、床头朝向吉方，有助于增强本命气场
         </p>
       </div>
 
-      {/* 免责提示 */}
-      <div className="text-[9px] text-[#0f1e30] leading-relaxed text-center pb-2">
+      <div className="text-[9px] leading-relaxed text-center pb-2" style={{ color: 'var(--t-faint)', opacity: 0.4 }}>
         风水补局仅为辅助参考，配合个人努力方为正道
       </div>
     </div>

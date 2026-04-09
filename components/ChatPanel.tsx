@@ -44,10 +44,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
       const res = await fetch('/api/interpret', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chart,
-          messages: [...messages, userMsg],
-        }),
+        body: JSON.stringify({ chart, messages: [...messages, userMsg] }),
       });
 
       if (!res.ok) throw new Error('请求失败');
@@ -81,7 +78,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
           }
         }
       }
-    } catch (err) {
+    } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: '解读失败，请检查API配置或稍后重试。',
@@ -92,23 +89,19 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-space-800/60 border border-palace-border/40 rounded-lg overflow-hidden backdrop-blur-sm">
+    <div className="flex flex-col h-full rounded-xl overflow-hidden card-glass">
       {/* 标题 */}
-      <div className="px-4 py-3 border-b border-palace-border/30 flex-shrink-0">
-        <h3 className="text-gold text-xs font-medium tracking-widest">AI 命盘解读</h3>
-        <p className="text-[10px] text-[#3a5a80] mt-0.5">倪海夏正宗紫微斗数 · 智慧解析</p>
+      <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--t-border)' }}>
+        <h3 className="text-xs font-medium tracking-widest" style={{ color: 'var(--t-gold)' }}>AI 命盘解读</h3>
+        <p className="text-[10px] mt-0.5" style={{ color: 'var(--t-faint)' }}>倪海夏正宗紫微斗数 · 智慧解析</p>
       </div>
 
       {/* 消息列表 */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
         {messages.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-6"
-          >
-            <div className="text-4xl mb-3 opacity-30">✦</div>
-            <p className="text-[#3a5a80] text-xs leading-relaxed">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
+            <div className="text-4xl mb-3" style={{ color: 'var(--t-gold)', opacity: 0.15 }}>✦</div>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
               命盘已生成，可直接提问<br />
               或从下方选择常见问题开始解读
             </p>
@@ -123,18 +116,25 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
               animate={{ opacity: 1, y: 0 }}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
-                msg.role === 'user'
-                  ? 'bg-gold/10 border border-gold/20 text-gold/90'
-                  : 'bg-space-700/60 border border-palace-border/30 text-slate-300'
-              }`}>
+              <div
+                className="max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed"
+                style={msg.role === 'user' ? {
+                  background: 'rgba(212,168,67,0.1)',
+                  border: '1px solid rgba(212,168,67,0.2)',
+                  color: 'var(--t-gold)',
+                } : {
+                  background: 'var(--t-card)',
+                  border: '1px solid var(--t-border)',
+                  color: 'var(--t-text)',
+                }}
+              >
                 {msg.role === 'assistant' && (
-                  <div className="text-[10px] text-[#3a5a80] mb-1">命理师 ·</div>
+                  <div className="text-[10px] mb-1" style={{ color: 'var(--t-faint)' }}>命理师 ·</div>
                 )}
                 <div className="whitespace-pre-wrap text-xs leading-relaxed">
                   {msg.content}
                   {loading && i === messages.length - 1 && msg.role === 'assistant' && (
-                    <span className="inline-block w-1.5 h-3 bg-gold/60 ml-0.5 animate-pulse" />
+                    <span className="inline-block w-1.5 h-3 ml-0.5 animate-pulse" style={{ background: 'var(--t-gold)', opacity: 0.6 }} />
                   )}
                 </div>
               </div>
@@ -152,7 +152,20 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
                 key={i}
                 onClick={() => sendMessage(q)}
                 disabled={loading}
-                className="text-left text-[10px] text-[#4a7090] border border-palace-border/40 rounded px-2 py-1.5 hover:border-gold/30 hover:text-gold/70 transition-colors line-clamp-2"
+                className="text-left text-[10px] rounded-lg px-2.5 py-2 transition-all line-clamp-2"
+                style={{
+                  color: 'var(--t-text2)',
+                  border: '1px solid var(--t-border)',
+                  background: 'transparent',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'rgba(212,168,67,0.3)';
+                  e.currentTarget.style.color = 'var(--t-gold)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--t-border)';
+                  e.currentTarget.style.color = 'var(--t-text2)';
+                }}
               >
                 {q}
               </button>
@@ -162,7 +175,7 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
       )}
 
       {/* 输入框 */}
-      <div className="px-3 pb-3 pt-2 border-t border-palace-border/20 flex-shrink-0">
+      <div className="px-3 pb-3 pt-2 flex-shrink-0" style={{ borderTop: '1px solid var(--t-border)' }}>
         <div className="flex gap-2">
           <input
             type="text"
@@ -171,12 +184,22 @@ export default function ChatPanel({ chart }: ChatPanelProps) {
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage(input)}
             placeholder="输入问题，如：我的感情运势如何？"
             disabled={loading}
-            className="flex-1 bg-space-700/60 border border-palace-border/40 text-slate-300 rounded px-3 py-2 text-xs focus:outline-none focus:border-gold/40 placeholder-slate-600 transition-colors"
+            className="flex-1 rounded-lg px-3 py-2 text-xs focus:outline-none transition-colors"
+            style={{
+              background: 'var(--t-card)',
+              border: '1px solid var(--t-border)',
+              color: 'var(--t-text)',
+            }}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={loading || !input.trim()}
-            className="px-3 py-2 rounded bg-gold/20 border border-gold/30 text-gold text-xs hover:bg-gold/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="px-3 py-2 rounded-lg text-xs font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(212,168,67,0.15)',
+              border: '1px solid rgba(212,168,67,0.25)',
+              color: 'var(--t-gold)',
+            }}
           >
             解读
           </button>
