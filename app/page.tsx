@@ -271,8 +271,8 @@ export default function HomePage() {
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto">
+      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-20">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-20">
 
           {/* 标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -358,7 +358,7 @@ export default function HomePage() {
         {/* 滚动提示 */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-[9px] tracking-[0.4em] uppercase transition-colors duration-300"
             style={{ color: c.scrollText }}>探索更多</span>
           <motion.div animate={{ y: [0, 6, 0] }}
@@ -718,7 +718,7 @@ export default function HomePage() {
                 style={{ background: c.niDivider }} />
 
               {/* 传记文字 */}
-              <div className="space-y-4 text-sm leading-relaxed max-w-3xl mx-auto text-center transition-colors duration-300"
+              <div className="space-y-4 text-sm leading-relaxed max-w-3xl mx-auto text-left transition-colors duration-300"
                 style={{ color: c.textSecond }}>
                 <p>
                   倪海夏老师自幼接触命理，精研紫微斗数、奇门遁甲、六壬等传统术数数十年。
