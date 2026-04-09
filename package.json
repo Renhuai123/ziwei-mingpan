@@ -14,7 +14,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.0",
     "lunar-javascript": "^1.7.3",
-    "next": "^15.5.2",
+    "next": "^16.2.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "vercel": "47.0.4"
