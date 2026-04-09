@@ -64,8 +64,6 @@ export default function PalaceCell({
           ? 'inset 0 0 0 1.5px rgba(212,168,67,0.5)'
           : isSanFang
           ? 'inset 0 0 0 1px rgba(212,168,67,0.3)'
-          : isMingGong
-          ? 'inset 3px 0 0 rgba(212,168,67,0.35)'
           : 'none',
       }}
     >
