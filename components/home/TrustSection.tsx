@@ -1,35 +1,42 @@
 export default function TrustSection() {
   const stats = [
-    { n: '14',   label: '主星', sub: '精确亮度计算' },
-    { n: '12',   label: '宫位', sub: '准确天干对应' },
-    { n: '4',    label: '化系统', sub: '禄权科忌完整规则' },
-    { n: '100+', label: '解读条目', sub: '倪师体系文案' },
-  ];
-
-  const diffs = [
-    { col: '普通算命工具', items: ['输出一段结论', '不知道依据来源', '套话，无法验证', '一次性使用'] },
-    { col: '紫薇斗数 2.0', items: ['结论附带命盘溯源', '每一句话有星曜依据', '结构化，可反复研究', '大限流年持续使用'], accent: true },
+    { n: '14',   label: '主星',    desc: '精确亮度计算' },
+    { n: '12',   label: '宫位',    desc: '准确天干对应' },
+    { n: '4',    label: '化系统',  desc: '禄权科忌完整规则' },
+    { n: '100+', label: '解读条目', desc: '倪海夏体系原著' },
   ];
 
   return (
-    <section style={{ padding: '100px 40px', background: 'var(--bg-1)' }}>
+    <section style={{ padding: '120px 48px', background: '#F4F2EC' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
         {/* 标题 */}
-        <div style={{ textAlign: 'center', marginBottom: '72px' }}>
-          <div className="label-section" style={{ marginBottom: '16px' }}>体系可信度</div>
-          <h2
+        <div style={{ marginBottom: '72px' }}>
+          <div
             style={{
-              fontSize: 'clamp(26px, 3.5vw, 40px)',
-              fontWeight: 600,
-              color: 'var(--tx-0)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-              marginBottom: '12px',
+              fontSize: '11px',
+              letterSpacing: '0.12em',
+              color: 'var(--ac)',
+              opacity: 0.7,
+              marginBottom: '20px',
+              textTransform: 'uppercase',
             }}
           >
-            一套值得认真研究的体系
+            体系基础
+          </div>
+          <h2
+            style={{
+              fontSize: 'clamp(30px, 4vw, 48px)',
+              fontWeight: 600,
+              color: '#1A1A18',
+              letterSpacing: '-0.025em',
+              lineHeight: 1.12,
+              marginBottom: '16px',
+            }}
+          >
+            建立在一套可以学习、<br />可以验证的体系之上。
           </h2>
-          <p style={{ fontSize: '15px', color: 'var(--tx-3)', maxWidth: '440px', margin: '0 auto' }}>
+          <p style={{ fontSize: '15px', color: '#6B6760', lineHeight: 1.7 }}>
             倪海夏 · 南派三合 · 台湾正统传承
           </p>
         </div>
@@ -40,142 +47,99 @@ export default function TrustSection() {
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '1px',
-            background: 'var(--bdr)',
-            borderRadius: 'var(--r-lg)',
+            background: '#DDD9D2',
+            borderRadius: '16px',
             overflow: 'hidden',
-            marginBottom: '60px',
-            border: '1px solid var(--bdr)',
+            border: '1px solid #DDD9D2',
+            marginBottom: '56px',
           }}
         >
           {stats.map((s, i) => (
             <div
               key={i}
               style={{
-                background: 'white',
-                padding: '32px 24px',
+                background: '#FAFAF8',
+                padding: '40px 28px',
                 textAlign: 'center',
               }}
             >
               <div
                 style={{
-                  fontSize: 'clamp(28px, 3.5vw, 40px)',
+                  fontSize: 'clamp(32px, 4vw, 48px)',
                   fontWeight: 700,
-                  color: 'var(--tx-0)',
-                  letterSpacing: '-0.02em',
-                  marginBottom: '4px',
+                  color: '#1A1A18',
+                  letterSpacing: '-0.03em',
+                  marginBottom: '6px',
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
                 {s.n}
               </div>
-              <div
-                style={{
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: 'var(--tx-1)',
-                  marginBottom: '4px',
-                }}
-              >
+              <div style={{ fontSize: '15px', fontWeight: 500, color: '#2A2A28', marginBottom: '4px' }}>
                 {s.label}
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--tx-3)' }}>{s.sub}</div>
+              <div style={{ fontSize: '12px', color: '#9A9490' }}>{s.desc}</div>
             </div>
           ))}
         </div>
 
-        {/* 对比表 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '60px' }}>
-          {diffs.map((col, ci) => (
+        {/* 正文 + 引用 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center' }}>
+          {/* 正文 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <p style={{ fontSize: '15px', color: '#4A4844', lineHeight: 1.80, margin: 0 }}>
+              紫微斗数不是神秘学，是一套有逻辑结构的分析框架。
+            </p>
+            <p style={{ fontSize: '15px', color: '#4A4844', lineHeight: 1.80, margin: 0 }}>
+              倪海夏体系强调大道至简：解读有逻辑链，每一个判断
+              都来自命盘的宫位组合，不依赖神秘感和模糊语言。
+            </p>
+            <p style={{ fontSize: '14px', color: '#9A9490', lineHeight: 1.75, margin: 0 }}>
+              我们按照原著体系实现，包含正确的四化规则、
+              精确的亮度判断和完整的三方四正逻辑。
+            </p>
+          </div>
+
+          {/* 引用卡 */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E8E6E0',
+              borderRadius: '16px',
+              padding: '36px 36px 32px',
+              position: 'relative',
+            }}
+          >
             <div
-              key={ci}
               style={{
-                borderRadius: 'var(--r-md)',
-                border: `1px solid ${col.accent ? 'var(--ac-bdr)' : 'var(--bdr)'}`,
-                background: col.accent ? 'var(--ac-bg)' : 'white',
-                overflow: 'hidden',
+                fontSize: '48px',
+                color: '#B8922A',
+                opacity: 0.12,
+                position: 'absolute',
+                top: '16px',
+                left: '28px',
+                lineHeight: 1,
+                fontFamily: 'serif',
               }}
             >
-              <div
-                style={{
-                  padding: '14px 20px',
-                  borderBottom: `1px solid ${col.accent ? 'var(--ac-bdr)' : 'var(--bdr)'}`,
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  color: col.accent ? 'var(--ac)' : 'var(--tx-3)',
-                }}
-              >
-                {col.col}
-              </div>
-              <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {col.items.map((item, ii) => (
-                  <div key={ii} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span
-                      style={{
-                        fontSize: '12px',
-                        color: col.accent ? 'var(--ac)' : 'var(--tx-3)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {col.accent ? '✓' : '○'}
-                    </span>
-                    <span style={{ fontSize: '13px', color: col.accent ? 'var(--tx-1)' : 'var(--tx-3)' }}>
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              ❝
             </div>
-          ))}
-        </div>
-
-        {/* 引用语 */}
-        <div
-          style={{
-            background: 'white',
-            border: '1px solid var(--bdr)',
-            borderRadius: 'var(--r-lg)',
-            padding: '36px 40px',
-            position: 'relative',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '40px',
-              color: 'var(--ac)',
-              opacity: 0.15,
-              position: 'absolute',
-              top: '20px',
-              left: '32px',
-              lineHeight: 1,
-              fontFamily: 'serif',
-            }}
-          >
-            ❝
-          </div>
-          <p
-            style={{
-              fontSize: '17px',
-              color: 'var(--tx-1)',
-              lineHeight: 1.75,
-              textAlign: 'center',
-              maxWidth: '600px',
-              margin: '0 auto',
-              paddingTop: '8px',
-            }}
-          >
-            紫微斗数是一门可以学习、可以验证、<br />
-            可以用来理解人生规律的学问。<br />
-            它不是迷信，是系统。
-          </p>
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: '20px',
-              fontSize: '12px',
-              color: 'var(--tx-3)',
-              letterSpacing: '0.06em',
-            }}
-          >
-            倪海夏体系核心理念
+            <p
+              style={{
+                fontSize: '16px',
+                color: '#2A2A28',
+                lineHeight: 1.75,
+                textAlign: 'center',
+                paddingTop: '12px',
+                margin: '0 0 20px',
+              }}
+            >
+              紫微斗数是可以学习、可以研究的学问。<br />
+              它不是迷信，是系统。
+            </p>
+            <div style={{ textAlign: 'center', fontSize: '12px', color: '#9A9490', letterSpacing: '0.06em' }}>
+              倪海夏体系核心理念
+            </div>
           </div>
         </div>
       </div>

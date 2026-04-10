@@ -5,42 +5,58 @@ const QUESTIONS = [
   '今年适合换工作吗？',
   '我的财运模式是什么？',
   '感情什么时候会到来？',
-  '我适合做哪类工作？',
+  '我适合做什么类型的工作？',
   '当前大限走的是什么运？',
-  '夫妻宫的主星说明什么？',
+  '夫妻宫主星说明什么？',
 ];
 
 export default function SampleQuestions() {
   return (
-    <section style={{ padding: '100px 40px', background: 'var(--bg-0)' }}>
+    <section style={{ padding: '120px 48px', background: '#FAFAF8' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
         {/* 标题 */}
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-          <div className="label-section" style={{ marginBottom: '16px' }}>问题入口</div>
-          <h2
+        <div style={{ marginBottom: '64px' }}>
+          <div
             style={{
-              fontSize: 'clamp(26px, 3.5vw, 40px)',
-              fontWeight: 600,
-              color: 'var(--tx-0)',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-              marginBottom: '12px',
+              fontSize: '11px',
+              letterSpacing: '0.12em',
+              color: 'var(--ac)',
+              opacity: 0.7,
+              marginBottom: '20px',
+              textTransform: 'uppercase',
             }}
           >
-            从一个问题开始
+            从这里开始
+          </div>
+          <h2
+            style={{
+              fontSize: 'clamp(30px, 4vw, 48px)',
+              fontWeight: 600,
+              color: '#1A1A18',
+              letterSpacing: '-0.025em',
+              lineHeight: 1.1,
+              marginBottom: '16px',
+            }}
+          >
+            从一个问题开始。
           </h2>
-          <p style={{ fontSize: '15px', color: 'var(--tx-3)' }}>
-            输入出生年月日时，AI 以你的命盘数据作为上下文来回答
+          <p style={{ fontSize: '15px', color: '#6B6760', lineHeight: 1.7, maxWidth: '420px' }}>
+            起盘之后，你可以直接问。<br />
+            AI 以你的命盘为上下文来回答，不是通用建议。
           </p>
         </div>
 
-        {/* 问题卡片 */}
+        {/* 问题列表 */}
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '12px',
-            marginBottom: '52px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            marginBottom: '60px',
+            border: '1px solid #E8E6E0',
+            borderRadius: '16px',
+            overflow: 'hidden',
           }}
         >
           {QUESTIONS.map((q, i) => (
@@ -51,46 +67,46 @@ export default function SampleQuestions() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '16px 20px',
-                borderRadius: 'var(--r-md)',
-                border: '1px solid var(--bdr)',
-                background: 'white',
+                padding: '20px 28px',
+                background: '#FFFFFF',
+                borderBottom: i < QUESTIONS.length - 1 ? '1px solid #F0EDE8' : 'none',
                 textDecoration: 'none',
-                color: 'var(--tx-1)',
-                fontSize: '14px',
-                fontWeight: 400,
-                boxShadow: 'var(--sh-xs)',
-                transition: 'all 0.18s ease',
-                lineHeight: 1.45,
+                transition: 'background 0.15s ease',
+                cursor: 'pointer',
               }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = 'var(--ac-bdr)';
-                el.style.background = 'var(--ac-bg)';
-                el.style.transform = 'translateY(-2px)';
-                el.style.boxShadow = 'var(--sh-md)';
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = 'var(--bdr)';
-                el.style.background = 'white';
-                el.style.transform = 'translateY(0)';
-                el.style.boxShadow = 'var(--sh-xs)';
-              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#FAFAF8'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#FFFFFF'; }}
             >
-              <span>{q}</span>
-              <span style={{ color: 'var(--tx-3)', marginLeft: '8px', flexShrink: 0 }}>→</span>
+              <span style={{ fontSize: '15px', color: '#1A1A18', fontWeight: 400 }}>{q}</span>
+              <span style={{ fontSize: '14px', color: '#C4BFB4', flexShrink: 0 }}>→</span>
             </Link>
           ))}
         </div>
 
-        {/* 大 CTA */}
+        {/* CTA */}
         <div style={{ textAlign: 'center' }}>
-          <Link href="/chart" className="btn-accent" style={{ fontSize: '15px', padding: '14px 36px' }}>
-            输入出生信息，开始分析
+          <Link
+            href="/chart"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '14px 36px',
+              borderRadius: '100px',
+              background: '#1A1A18',
+              color: '#F0EDE8',
+              fontSize: '15px',
+              fontWeight: 500,
+              textDecoration: 'none',
+              letterSpacing: '0.01em',
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.80'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+          >
+            立即起盘，开始分析
           </Link>
-          <p style={{ marginTop: '14px', fontSize: '12px', color: 'var(--tx-3)' }}>
-            约 5 秒生成完整命盘 · 无需注册
+          <p style={{ marginTop: '14px', fontSize: '12px', color: '#A8A49E', letterSpacing: '0.04em' }}>
+            约 5 秒生成完整命盘
           </p>
         </div>
       </div>

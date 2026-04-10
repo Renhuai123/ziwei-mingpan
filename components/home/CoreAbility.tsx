@@ -1,8 +1,11 @@
 export default function CoreAbility() {
   const abilities = [
     {
+      num: '01',
+      title: '专业排盘',
+      desc: '完整实现倪海夏体系。14 主星、12 宫位、四化规则、真太阳时校正，算法完整，不简化。',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="9" />
           <circle cx="12" cy="12" r="3" />
           <line x1="12" y1="3" x2="12" y2="6" />
@@ -11,33 +14,28 @@ export default function CoreAbility() {
           <line x1="18" y1="12" x2="21" y2="12" />
         </svg>
       ),
-      title: '专业排盘',
-      desc: '基于倪海夏南派三合体系，精确实现 14 主星、纳音五行局、正确四化规则与真太阳时校正。不简化，不省略。',
-      points: ['14 主星亮度精确', '真太阳时自动校正', '完整辅星与煞星'],
     },
     {
+      num: '02',
+      title: '结构化分析',
+      desc: '每一条结论都附带宫位来源。结论可溯源，路径可验证。不是套话，不是白话文段落。',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="5" width="18" height="14" rx="2" />
           <line x1="3" y1="10" x2="21" y2="10" />
           <line x1="8" y1="14" x2="13" y2="14" />
         </svg>
       ),
-      title: '结构化分析',
-      desc: '每一个分析结论都有固定结构：核心判断 → 命盘依据 → 风险提醒 → 行动建议。不输出白话文段落。',
-      points: ['结论可溯源到宫位', '证据链完整展开', '建议具体可执行'],
     },
     {
+      num: '03',
+      title: '继续追问',
+      desc: '点击任意宫位，AI 即时注入命盘上下文。不是聊天框，是以命盘为核心的分析引擎。',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          <line x1="9" y1="10" x2="15" y2="10" />
-          <line x1="9" y1="14" x2="13" y2="14" />
         </svg>
       ),
-      title: '继续追问',
-      desc: '你的问题不是孤立的 AI 聊天，而是有完整命盘数据作为上下文。点击任意宫位，分析即时更新。',
-      points: ['命盘数据作为上下文', '宫位/星曜上下文感知', '持续对话不丢失命盘'],
     },
   ];
 
@@ -45,101 +43,113 @@ export default function CoreAbility() {
     <section
       id="core-ability"
       style={{
-        padding: '100px 40px',
-        background: 'var(--bg-0)',
-        maxWidth: '1200px',
-        margin: '0 auto',
+        padding: '120px 48px',
+        background: '#FAFAF8',
       }}
     >
-      {/* 标题区 */}
-      <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-        <div className="label-section" style={{ marginBottom: '16px' }}>核心能力</div>
-        <h2
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
+        {/* 标题区 */}
+        <div style={{ marginBottom: '80px' }}>
+          <div
+            style={{
+              fontSize: '11px',
+              letterSpacing: '0.12em',
+              color: 'var(--ac)',
+              opacity: 0.7,
+              marginBottom: '20px',
+              textTransform: 'uppercase',
+            }}
+          >
+            核心能力
+          </div>
+          <h2
+            style={{
+              fontSize: 'clamp(30px, 4vw, 48px)',
+              fontWeight: 600,
+              color: '#1A1A18',
+              letterSpacing: '-0.025em',
+              lineHeight: 1.1,
+            }}
+          >
+            三件事，做到专业。
+          </h2>
+        </div>
+
+        {/* 三栏能力卡 */}
+        <div
           style={{
-            fontSize: 'clamp(28px, 4vw, 42px)',
-            fontWeight: 600,
-            color: 'var(--tx-0)',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.15,
-            marginBottom: '16px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1px',
+            background: '#E8E6E0',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: '1px solid #E8E6E0',
           }}
         >
-          专业底座，让解读有依据
-        </h2>
-        <p style={{ fontSize: '16px', color: 'var(--tx-3)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.65 }}>
-          不是套话生成，每一个结论都来自命盘数据
-        </p>
-      </div>
-
-      {/* 三栏 */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '20px',
-        }}
-      >
-        {abilities.map((ab, i) => (
-          <div
-            key={i}
-            className="card"
-            style={{ padding: '32px 28px' }}
-          >
-            {/* 图标 */}
+          {abilities.map((ab, i) => (
             <div
+              key={i}
               style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: 'var(--r-sm)',
-                background: 'var(--bg-1)',
-                border: '1px solid var(--bdr)',
+                background: '#FFFFFF',
+                padding: '44px 36px',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--tx-2)',
-                marginBottom: '20px',
+                flexDirection: 'column',
+                gap: '0',
               }}
             >
-              {ab.icon}
-            </div>
-
-            {/* 标题 */}
-            <h3
-              style={{
-                fontSize: '17px',
-                fontWeight: 600,
-                color: 'var(--tx-0)',
-                marginBottom: '12px',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              {ab.title}
-            </h3>
-
-            {/* 描述 */}
-            <p style={{ fontSize: '14px', color: 'var(--tx-2)', lineHeight: 1.65, marginBottom: '20px' }}>
-              {ab.desc}
-            </p>
-
-            {/* 要点列表 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {ab.points.map((pt, j) => (
-                <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div
-                    style={{
-                      width: '5px',
-                      height: '5px',
-                      borderRadius: '50%',
-                      background: 'var(--ac)',
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span style={{ fontSize: '13px', color: 'var(--tx-2)' }}>{pt}</span>
+              {/* 序号 + 图标 */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '32px',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontFamily: 'var(--font-mono)',
+                    color: '#C4BFB4',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {ab.num}
+                </span>
+                <div style={{ color: '#9A9490' }}>
+                  {ab.icon}
                 </div>
-              ))}
+              </div>
+
+              {/* 标题 */}
+              <h3
+                style={{
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  color: '#1A1A18',
+                  marginBottom: '14px',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {ab.title}
+              </h3>
+
+              {/* 副文案 */}
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: '#6B6760',
+                  lineHeight: 1.70,
+                  margin: 0,
+                }}
+              >
+                {ab.desc}
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
