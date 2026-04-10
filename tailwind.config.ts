@@ -9,68 +9,62 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        space: {
-          950: "#020410",
-          900: "#060818",
-          800: "#0a0f1e",
-          700: "#0d1528",
-          600: "#111e35",
+        // 2.0 设计系统色
+        bg: {
+          0: "#FAFAF9",
+          1: "#F4F3EF",
+          2: "#ECEAE4",
+          inv: "#0D0D0B",
         },
-        palace: {
-          bg: "#0b1628",
-          border: "#1a3a5c",
-          hover: "#1e4570",
-          glow: "#2563eb",
+        tx: {
+          0: "#0D0D0B",
+          1: "#1A1A18",
+          2: "#4A4A45",
+          3: "#8A8A82",
+          inv: "#F0EDE8",
         },
-        gold: {
-          DEFAULT: "#d4a843",
-          bright: "#f0c755",
-          dim: "#8a6a20",
+        ac: {
+          DEFAULT: "#B8922A",
+          dim: "#7A5F1A",
         },
-        star: {
-          major: "#f0c755",
-          minor: "#7dd3fc",
-          sha: "#f87171",
-          lucky: "#6ee7b7",
-        },
-        hua: {
-          lu: "#4ade80",
-          quan: "#60a5fa",
-          ke: "#facc15",
-          ji: "#f87171",
-        },
+        // 四化语义色
+        lu:   "#2D7A4A",
+        quan: "#1A56A8",
+        ke:   "#8A7018",
+        ji:   "#A83228",
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+        sans: ["var(--font)"],
+        mono: ["var(--font-mono)"],
+      },
+      boxShadow: {
+        xs: "0 1px 2px rgba(0,0,0,0.05)",
+        sm: "0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
+        md: "0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05)",
+        lg: "0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06)",
+      },
+      borderRadius: {
+        xs: "4px",
+        sm: "8px",
+        md: "12px",
+        lg: "16px",
+        xl: "24px",
+        pill: "999px",
       },
       animation: {
-        "star-twinkle": "twinkle 3s ease-in-out infinite",
-        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
-        "float-up": "floatUp 0.6s ease-out forwards",
+        "fade-up": "fadeUp 0.5s ease forwards",
+        "fade-in": "fadeIn 0.4s ease forwards",
         "spin-slow": "spin 20s linear infinite",
       },
       keyframes: {
-        twinkle: {
-          "0%, 100%": { opacity: "0.3", transform: "scale(0.8)" },
-          "50%": { opacity: "1", transform: "scale(1.2)" },
-        },
-        pulseGlow: {
-          "0%, 100%": { boxShadow: "0 0 5px rgba(212,168,67,0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(212,168,67,0.8)" },
-        },
-        floatUp: {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+        fadeUp: {
+          "0%":   { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-      },
-      backgroundImage: {
-        "cosmic-gradient":
-          "radial-gradient(ellipse at center, #0d1528 0%, #060818 60%, #020410 100%)",
-        "palace-gradient":
-          "linear-gradient(135deg, #0b1628 0%, #0f1e3a 100%)",
-        "gold-gradient":
-          "linear-gradient(135deg, #d4a843 0%, #f0c755 50%, #d4a843 100%)",
+        fadeIn: {
+          "0%":   { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
     },
   },
