@@ -1,27 +1,30 @@
 export default function ExplainDemo() {
-  const analysisLines = [
+  const layers = [
     {
-      text: '官禄宫廉贞化禄，宜任职，事业即财路。',
-      source: '官禄宫 · 廉贞 · 化禄入宫 · 南派三合解读',
-      type: 'conclusion',
+      tag: '结论',
+      tagColor: 'var(--ac)',
+      tagBg: 'rgba(184,146,42,0.08)',
+      tagBorder: 'rgba(184,146,42,0.20)',
+      borderColor: 'var(--ac)',
+      text: '官禄宫廉贞化禄，宜任职，事业即财路。工作本身是主要进财方式，不宜合伙或自营。',
     },
     {
-      text: '三方财帛受惠，收入稳定，工作是主要进财方式。',
-      source: '财帛宫（三合）· 官禄禄照财',
-      type: 'logic',
+      tag: '依据',
+      tagColor: '#1A56A8',
+      tagBg: 'rgba(26,86,168,0.07)',
+      tagBorder: 'rgba(26,86,168,0.18)',
+      borderColor: 'rgba(26,86,168,0.5)',
+      text: '官禄宫 · 廉贞星 · 本命化禄入宫 → 三方财帛受益 · 倪海夏：禄在官禄，禄随人走，最宜固定职位。',
     },
     {
-      text: '当前大限（34–43岁）走事业宫，为事业上升期。',
-      source: '大限命宫 · 丙干 · 大限四化',
-      type: 'period',
+      tag: '建议',
+      tagColor: '#2D7A4A',
+      tagBg: 'rgba(45,122,74,0.07)',
+      tagBorder: 'rgba(45,122,74,0.18)',
+      borderColor: 'rgba(45,122,74,0.5)',
+      text: '当前大限（34–43岁）走事业宫，是职业晋升关键期。今年流年官禄逢吉，可主动争取机会。',
     },
   ];
-
-  const typeStyles: Record<string, React.CSSProperties> = {
-    conclusion: { borderLeft: '3px solid var(--ac)', paddingLeft: '14px' },
-    logic:      { borderLeft: '3px solid rgba(26,86,168,0.5)', paddingLeft: '14px' },
-    period:     { borderLeft: '3px solid rgba(45,122,74,0.5)', paddingLeft: '14px' },
-  };
 
   return (
     <section
@@ -55,24 +58,21 @@ export default function ExplainDemo() {
               marginBottom: '24px',
             }}
           >
-            命中感<br />来自逻辑链
+            不是只给结论<br />
+            <span style={{ color: 'rgba(240,237,232,0.50)', fontWeight: 400 }}>也给判断路径</span>
           </h2>
           <p
             style={{
               fontSize: '15px',
               color: 'var(--tx-inv2)',
               lineHeight: 1.75,
-              marginBottom: '32px',
+              marginBottom: '20px',
             }}
           >
-            传统命理软件输出一段话，你无法知道它从哪里来。
-          </p>
-          <p style={{ fontSize: '15px', color: 'var(--tx-inv2)', lineHeight: 1.75, marginBottom: '32px' }}>
-            我们不这样做。每一句结论，都附带它的命盘来源——
-            是哪个宫位、哪颗星、哪个四化，以及倪海夏如何解读这种配置。
+            每一条分析都有三层结构：得出了什么结论、依据是哪个宫位与星曜、以及对你当下阶段的具体建议。
           </p>
           <p style={{ fontSize: '15px', color: 'rgba(240,237,232,0.35)', lineHeight: 1.75 }}>
-            这种透明度，让命盘可以被研究，而不只是被消费。
+            结论可溯源，路径透明，命盘值得反复研究。
           </p>
         </div>
 
@@ -99,36 +99,46 @@ export default function ExplainDemo() {
             >
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--ac)' }} />
               <span style={{ fontSize: '12px', color: 'rgba(184,146,42,0.70)', letterSpacing: '0.05em' }}>
-                事业分析 · 命盘依据
+                事业分析 · 官禄宫
               </span>
             </div>
 
-            {/* 分析条目 */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              {analysisLines.map((line, i) => (
-                <div key={i} style={typeStyles[line.type]}>
-                  <div
-                    style={{
-                      fontSize: '14px',
-                      color: 'var(--tx-inv)',
-                      lineHeight: 1.6,
-                      marginBottom: '6px',
-                    }}
-                  >
-                    {line.text}
+            {/* 三层结构 */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {layers.map((layer, i) => (
+                <div
+                  key={i}
+                  style={{
+                    borderLeft: `3px solid ${layer.borderColor}`,
+                    paddingLeft: '14px',
+                    paddingTop: '4px',
+                    paddingBottom: '4px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        color: layer.tagColor,
+                        background: layer.tagBg,
+                        border: `1px solid ${layer.tagBorder}`,
+                        padding: '2px 8px',
+                        borderRadius: '100px',
+                        letterSpacing: '0.04em',
+                      }}
+                    >
+                      {layer.tag}
+                    </span>
                   </div>
                   <div
                     style={{
-                      fontSize: '11px',
-                      color: 'rgba(240,237,232,0.30)',
-                      fontFamily: 'var(--font-mono)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
+                      fontSize: '13px',
+                      color: 'rgba(240,237,232,0.75)',
+                      lineHeight: 1.65,
                     }}
                   >
-                    <span>↑</span>
-                    <span>{line.source}</span>
+                    {layer.text}
                   </div>
                 </div>
               ))}
@@ -140,14 +150,14 @@ export default function ExplainDemo() {
                 marginTop: '20px',
                 paddingTop: '16px',
                 borderTop: '1px solid rgba(255,255,255,0.07)',
-                fontSize: '12px',
-                color: 'rgba(240,237,232,0.25)',
+                fontSize: '11px',
+                color: 'rgba(240,237,232,0.22)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
               }}
             >
-              <span>点击任意依据，跳转命盘对应宫位</span>
+              <span>可点击依据中的宫位跳转查看命盘</span>
               <span>→</span>
             </div>
           </div>

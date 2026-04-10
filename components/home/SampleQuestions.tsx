@@ -5,10 +5,8 @@ const QUESTIONS = [
   '今年适合换工作吗？',
   '我的财运模式是什么？',
   '感情什么时候会到来？',
-  '为什么总是创业受挫？',
   '我适合做哪类工作？',
   '当前大限走的是什么运？',
-  '身体需要注意什么？',
   '夫妻宫的主星说明什么？',
 ];
 
@@ -18,7 +16,7 @@ export default function SampleQuestions() {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* 标题 */}
         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-          <div className="label-section" style={{ marginBottom: '16px' }}>你可能想知道</div>
+          <div className="label-section" style={{ marginBottom: '16px' }}>问题入口</div>
           <h2
             style={{
               fontSize: 'clamp(26px, 3.5vw, 40px)',
@@ -29,7 +27,7 @@ export default function SampleQuestions() {
               marginBottom: '12px',
             }}
           >
-            这些问题<br />都可以在命盘里找到答案
+            从一个问题开始
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--tx-3)' }}>
             输入出生年月日时，AI 以你的命盘数据作为上下文来回答

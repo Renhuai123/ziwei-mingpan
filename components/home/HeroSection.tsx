@@ -236,11 +236,11 @@ export default function HeroSection() {
               color: 'var(--tx-inv2)',
               lineHeight: 1.7,
               marginBottom: '40px',
-              maxWidth: '420px',
+              maxWidth: '440px',
             }}
           >
-            完整排盘，结构化解读，AI 深度追问。<br />
-            每一个结论都来自命盘数据，可溯源，可验证。
+            基于倪海夏体系的紫微命盘工作台。<br />
+            专业排盘、结构化分析、限量 AI 追问。
           </p>
 
           {/* CTA 区 */}
@@ -249,7 +249,7 @@ export default function HeroSection() {
               立即起盘
             </Link>
             <a
-              href="#core-ability"
+              href="/chart"
               style={{
                 fontSize: '14px',
                 color: 'rgba(240,237,232,0.50)',
@@ -258,11 +258,22 @@ export default function HeroSection() {
                 alignItems: 'center',
                 gap: '4px',
                 transition: 'color 0.15s',
+                padding: '13px 24px',
+                borderRadius: 'var(--r-pill)',
+                border: '1px solid rgba(255,255,255,0.15)',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,237,232,0.85)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,237,232,0.50)'; }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'rgba(240,237,232,0.85)';
+                el.style.borderColor = 'rgba(184,146,42,0.4)';
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = 'rgba(240,237,232,0.50)';
+                el.style.borderColor = 'rgba(255,255,255,0.15)';
+              }}
             >
-              了解体系 <span style={{ fontSize: '16px' }}>→</span>
+              查看样例命盘
             </a>
           </div>
 

@@ -140,7 +140,7 @@ export default function FAQSection() {
                   lineHeight: 1.2,
                 }}
               >
-                准备好了吗？
+                开始建立你的命盘
               </h3>
               <p
                 style={{
@@ -150,7 +150,7 @@ export default function FAQSection() {
                   marginBottom: '32px',
                 }}
               >
-                输入你的出生年月日时<br />
+                输入出生年月日时<br />
                 约 5 秒生成完整命盘
               </p>
               <Link
@@ -174,7 +174,7 @@ export default function FAQSection() {
                   letterSpacing: '0.04em',
                 }}
               >
-                无需注册 · 完全免费起盘
+                无需注册 · 免费起盘
               </p>
             </div>
           </div>

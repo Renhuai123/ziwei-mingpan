@@ -57,8 +57,8 @@ export default function TimeDimension() {
               marginBottom: '12px',
             }}
           >
-            命盘是静态的<br />
-            <span style={{ color: 'var(--tx-3)', fontWeight: 400 }}>你的人生是动态的</span>
+            本命之外<br />
+            <span style={{ color: 'var(--tx-3)', fontWeight: 400 }}>也看阶段</span>
           </h2>
           <p style={{ fontSize: '15px', color: 'var(--tx-3)', maxWidth: '440px', margin: '0 auto' }}>
             本命 / 大限 / 流年 / 流月，四个时间维度随时切换
