@@ -1,5 +1,13 @@
 'use client';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+// 统一的浮出动画配置
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 22 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] as const },
+});
 
 // 产品界面 Mock — 命盘 + AI 分析面板
 function ProductMock() {
@@ -178,7 +186,8 @@ export default function HeroSection() {
       }}
     >
       {/* 导航 */}
-      <nav
+      <motion.nav
+        {...fadeUp(0)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -217,7 +226,7 @@ export default function HeroSection() {
         >
           起盘
         </Link>
-      </nav>
+      </motion.nav>
 
       {/* 主内容 */}
       <div
@@ -235,7 +244,8 @@ export default function HeroSection() {
         {/* 左侧文案 */}
         <div style={{ flex: '1 1 480px' }}>
           {/* 主标题 */}
-          <h1
+          <motion.h1
+            {...fadeUp(0.18)}
             style={{
               fontSize: 'clamp(40px, 5.5vw, 68px)',
               fontWeight: 600,
@@ -246,10 +256,11 @@ export default function HeroSection() {
             }}
           >
             看懂命盘，<br />不止于排盘。
-          </h1>
+          </motion.h1>
 
           {/* 副标题 */}
-          <p
+          <motion.p
+            {...fadeUp(0.32)}
             style={{
               fontSize: '17px',
               color: 'rgba(240,237,232,0.50)',
@@ -260,10 +271,10 @@ export default function HeroSection() {
           >
             基于倪海夏体系的紫微命盘工作台。<br />
             专业排盘、结构化分析、限量 AI 追问。
-          </p>
+          </motion.p>
 
           {/* CTA 区 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          <motion.div {...fadeUp(0.44)} style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
             <Link
               href="/chart"
               style={{
@@ -310,15 +321,16 @@ export default function HeroSection() {
             >
               查看样例命盘
             </Link>
-          </div>
+          </motion.div>
 
           {/* 辅助小字 */}
-          <p style={{ fontSize: '12px', color: 'rgba(240,237,232,0.25)', letterSpacing: '0.04em', marginBottom: '56px' }}>
+          <motion.p {...fadeUp(0.52)} style={{ fontSize: '12px', color: 'rgba(240,237,232,0.25)', letterSpacing: '0.04em', marginBottom: '56px' }}>
             无需注册 · 免费起盘
-          </p>
+          </motion.p>
 
           {/* 三标签 */}
-          <div
+          <motion.div
+            {...fadeUp(0.60)}
             style={{
               display: 'flex',
               gap: '0',
@@ -341,13 +353,18 @@ export default function HeroSection() {
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
         {/* 右侧产品 Mock */}
-        <div style={{ flex: '0 0 400px', maxWidth: '440px', width: '100%' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 28, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.80, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          style={{ flex: '0 0 400px', maxWidth: '440px', width: '100%' }}
+        >
           <ProductMock />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
