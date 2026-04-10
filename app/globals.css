@@ -145,3 +145,39 @@ body {
 [data-theme="light"] .card-inner {
   box-shadow: 0 1px 4px rgba(160, 120, 30, 0.06);
 }
+
+/* ─── 打印 / 导出 PDF ────────────────────────────────────── */
+@media print {
+  /* 重置主题变量为亮色打印友好版 */
+  :root, [data-theme="dark"], [data-theme="light"] {
+    --t-bg:      #ffffff;
+    --t-surface: #f8f8f8;
+    --t-card:    #f0f0f0;
+    --t-border:  rgba(0,0,0,0.12);
+    --t-text:    #1a1a1a;
+    --t-text2:   #333333;
+    --t-faint:   #666666;
+    --t-gold:    #7a5000;
+    --t-gold2:   #5a3800;
+    --t-nav-bg:  #ffffff;
+  }
+
+  html, body {
+    background: white !important;
+    color: #1a1a1a !important;
+  }
+
+  /* 隐藏不需要打印的区域 */
+  .no-print { display: none !important; }
+
+  /* 分页不在格子内断开 */
+  .palace-cell { break-inside: avoid; }
+
+  /* 打印时移除动态光晕 */
+  canvas { display: none !important; }
+
+  @page {
+    margin: 1.2cm;
+    size: A4 landscape;
+  }
+}

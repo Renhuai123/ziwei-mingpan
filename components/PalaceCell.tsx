@@ -11,27 +11,51 @@ interface PalaceCellProps {
   isSelected?: boolean;
   isSanFang?: boolean;
   delay?: number;
+  /** 叠加四化：星名 → 四化类型（'禄'/'权'/'科'/'忌'） */
+  overlayStarSiHua?: Record<string, string>;
+  /** 叠加标签：'年'（流年）或 '限'（大限） */
+  overlayLabel?: string;
+  /** 点击叠加四化 badge 回调 */
+  onSiHuaClick?: (starName: string, siHua: string) => void;
 }
 
-const SiHuaBadge = ({ siHua }: { siHua: string }) => {
-  const styles: Record<string, string> = {
-    '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-    '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-    '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-    '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
-  };
+const SIHUA_STYLES: Record<string, string> = {
+  '禄': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+  '权': 'text-blue-400 bg-blue-500/10 border-blue-500/30',
+  '科': 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
+  '忌': 'text-red-400 bg-red-500/10 border-red-500/30',
+};
+
+const SiHuaBadge = ({
+  siHua,
+  overlay,
+  label,
+  onClick,
+}: {
+  siHua: string;
+  overlay?: boolean;
+  label?: string;
+  onClick?: (e: React.MouseEvent) => void;
+}) => {
   return (
-    <span className={clsx(
-      'inline-flex items-center text-[8px] px-1 rounded-full border leading-none py-px font-bold ml-1 flex-shrink-0',
-      styles[siHua]
-    )}>
+    <span
+      className={clsx(
+        'inline-flex items-center text-[8px] px-1 rounded-full border leading-none py-px font-bold ml-1 flex-shrink-0',
+        SIHUA_STYLES[siHua],
+        overlay && 'border-dashed opacity-80',
+        onClick && 'cursor-pointer hover:opacity-100',
+      )}
+      onClick={onClick}
+    >
+      {overlay && label && <span className="mr-px opacity-70">{label}</span>}
       {siHua}
     </span>
   );
 };
 
 export default function PalaceCell({
-  palace, onClick, onStarClick, isSelected, isSanFang, delay = 0
+  palace, onClick, onStarClick, isSelected, isSanFang, delay = 0,
+  overlayStarSiHua, overlayLabel, onSiHuaClick,
 }: PalaceCellProps) {
   const { branch, stem, name, stars, daXianAge, isCurrentDaXian, isMingGong, isShenGong } = palace;
   const ganzhi = `${STEMS[stem]}${BRANCHES[branch]}`;
@@ -52,18 +76,18 @@ export default function PalaceCell({
         background: isCurrentDaXian
           ? 'rgba(147,51,234,0.08)'
           : isSelected
-          ? 'rgba(212,168,67,0.10)'
+          ? 'rgba(37,99,235,0.18)'
           : isSanFang
-          ? 'rgba(212,168,67,0.06)'
+          ? 'rgba(37,99,235,0.09)'
           : isMingGong
           ? 'rgba(212,168,67,0.04)'
           : 'var(--t-bg)',
         boxShadow: isCurrentDaXian
           ? 'inset 3px 0 0 rgba(147,51,234,0.5)'
           : isSelected
-          ? 'inset 0 0 0 1.5px rgba(212,168,67,0.5)'
+          ? 'inset 0 0 0 1.5px rgba(37,99,235,0.7)'
           : isSanFang
-          ? 'inset 0 0 0 1px rgba(212,168,67,0.3)'
+          ? 'inset 0 0 0 1px rgba(37,99,235,0.4)'
           : 'none',
       }}
     >
@@ -104,31 +128,60 @@ export default function PalaceCell({
         {majorStars.length === 0 && (
           <span className="text-[10px] italic" style={{ color: 'var(--t-faint)', opacity: 0.6 }}>空宫</span>
         )}
-        {majorStars.map((star) => (
-          <div
-            key={star.name}
-            className="flex items-center"
-            onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
-          >
-            <span className={clsx(
-              'text-[13px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all',
-              star.brightness === 'bright' ? 'text-amber-300' : star.brightness === 'dim' ? 'text-amber-700/80' : 'text-amber-500',
-            )}>
-              {star.name}
-            </span>
-            {star.siHua && <SiHuaBadge siHua={star.siHua} />}
-          </div>
-        ))}
+        {majorStars.map((star) => {
+          const overlaySiHua = overlayStarSiHua?.[star.name];
+          return (
+            <div
+              key={star.name}
+              className="flex items-center"
+              onClick={e => { e.stopPropagation(); onStarClick?.(star); }}
+            >
+              <span className={clsx(
+                'text-[13px] leading-tight font-bold tracking-tight cursor-pointer hover:brightness-125 transition-all',
+                star.brightness === 'bright' ? 'text-amber-300' : star.brightness === 'dim' ? 'text-amber-700/80' : 'text-amber-500',
+              )}>
+                {star.name}
+              </span>
+              {star.siHua && <SiHuaBadge siHua={star.siHua} />}
+              {overlaySiHua && (
+                <SiHuaBadge
+                  siHua={overlaySiHua}
+                  overlay
+                  label={overlayLabel}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onSiHuaClick?.(star.name, overlaySiHua);
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* 吉星 */}
       {luckyStars.length > 0 && (
         <div className="flex flex-wrap gap-x-1 mt-0.5">
-          {luckyStars.map(s => (
-            <span key={s.name} className="text-[9px] text-sky-500/70 leading-tight">
-              {s.name}{s.siHua && <SiHuaBadge siHua={s.siHua} />}
-            </span>
-          ))}
+          {luckyStars.map(s => {
+            const overlaySiHua = overlayStarSiHua?.[s.name];
+            return (
+              <span key={s.name} className="inline-flex items-center text-[9px] text-sky-500/70 leading-tight">
+                {s.name}
+                {s.siHua && <SiHuaBadge siHua={s.siHua} />}
+                {overlaySiHua && (
+                  <SiHuaBadge
+                    siHua={overlaySiHua}
+                    overlay
+                    label={overlayLabel}
+                    onClick={e => {
+                      e.stopPropagation();
+                      onSiHuaClick?.(s.name, overlaySiHua);
+                    }}
+                  />
+                )}
+              </span>
+            );
+          })}
         </div>
       )}
 

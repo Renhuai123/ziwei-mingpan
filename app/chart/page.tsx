@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import StarField from '@/components/StarField';
@@ -7,10 +7,12 @@ import BirthForm, { type BirthFormState } from '@/components/BirthForm';
 import { useTheme } from '@/components/ThemeProvider';
 import ChartBoard from '@/components/ChartBoard';
 import ChartSummary from '@/components/ChartSummary';
-import ChatPanel from '@/components/ChatPanel';
+import InsightPanel from '@/components/InsightPanel';
 import StarDetailPanel from '@/components/StarDetailPanel';
-import FengShuiPanel from '@/components/FengShuiPanel';
 import type { BirthInfo, ZiweiChart, Star, Palace } from '@/lib/ziwei/types';
+import type { TimeView } from '@/components/TimeNav';
+import { formToSearchParams, searchParamsToForm, formToBirthInfo } from '@/lib/ziwei/share';
+import { useHistory } from '@/lib/ziwei/history';
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -56,11 +58,31 @@ export default function ChartPage() {
   const [error, setError] = useState('');
   const [selectedStar, setSelectedStar] = useState<Star | null>(null);
   const [selectedStarPalace, setSelectedStarPalace] = useState<string>('');
-  const [rightPanel, setRightPanel] = useState<'ai' | 'detail' | 'fengshui'>('ai');
+  const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
+  const [selectedSiHua, setSelectedSiHua] = useState<{ starName: string; siHua: string; view: TimeView } | null>(null);
+  const [rightPanel, setRightPanel] = useState<'ai' | 'detail'>('ai');
   const [savedForm, setSavedForm] = useState<BirthFormState | null>(null);
   const [formKey, setFormKey] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const { history, save: saveHistory, remove: removeHistory } = useHistory();
 
   const isDark = theme === 'dark';
+
+  // ── URL 参数自动起盘 ──────────────────────────────────────
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const formData = searchParamsToForm(params);
+    if (!formData?.year) return;
+    const fullForm: BirthFormState = {
+      name: '', year: '', month: '', day: '',
+      clockHour: '8', clockMinute: '0', unknownTime: false,
+      province: '', city: '', longitude: 120, gender: 'male',
+      ...formData,
+    };
+    setSavedForm(fullForm);
+    handleSubmit(formToBirthInfo(fullForm));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (info: BirthInfo) => {
     setLoading(true);
@@ -93,39 +115,82 @@ export default function ChartPage() {
 
   const handleBack = () => {
     if (chart) {
-      // 从命盘回到起盘表单（保留数据）
       setChart(null);
       setError('');
       setSelectedStar(null);
       setRightPanel('ai');
-      setFormKey(k => k + 1); // 用新key重新挂载BirthForm使initialData生效
+      setFormKey(k => k + 1);
     } else {
-      // 从表单回到首页
       router.push('/');
     }
+  };
+
+  const handlePalaceSelect = (palace: Palace) => {
+    setSelectedPalace(palace);
+    setRightPanel('ai');
+  };
+
+  const handleSiHuaClick = (starName: string, siHua: string, view: TimeView) => {
+    setSelectedSiHua({ starName, siHua, view });
+    setRightPanel('ai');
   };
 
   const handleReset = () => {
     setChart(null);
     setError('');
     setSelectedStar(null);
+    setSelectedPalace(null);
+    setSelectedSiHua(null);
     setRightPanel('ai');
     setSavedForm(null);
     setFormKey(k => k + 1);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, '', '/chart');
+    }
+  };
+
+  const handleShare = () => {
+    if (!savedForm) return;
+    const params = formToSearchParams(savedForm);
+    const url = `${window.location.origin}/chart?${params.toString()}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      // 降级：选中输入框
+      const el = document.createElement('input');
+      el.value = url;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const handleLoadHistory = (form: BirthFormState) => {
+    setSavedForm(form);
+    const params = formToSearchParams(form);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, '', `/chart?${params.toString()}`);
+    }
+    handleSubmit(formToBirthInfo(form));
   };
 
   const TABS = [
     { key: 'ai', label: 'AI 解读' },
     { key: 'detail', label: '星曜详解' },
-    { key: 'fengshui', label: '风水补局' },
   ] as const;
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: 'var(--t-bg)', transition: 'background 0.35s ease' }}>
-      <StarField />
+      <div className="no-print">
+        <StarField />
+      </div>
 
       {/* 顶部光晕 */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden no-print">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[80px]"
           style={{ background: 'var(--t-glow1)' }} />
       </div>
@@ -133,7 +198,7 @@ export default function ChartPage() {
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* ─── 顶部导航 ─── */}
         <header
-          className="flex items-center justify-between px-5 py-2.5 border-b sticky top-0 z-20"
+          className="no-print relative flex items-center justify-between px-5 py-2.5 border-b sticky top-0 z-20"
           style={{
             background: 'var(--t-nav-bg)',
             borderColor: 'var(--t-border)',
@@ -152,7 +217,8 @@ export default function ChartPage() {
             <span className="tracking-wide">{chart ? '修改信息' : '返回首页'}</span>
           </motion.button>
 
-          <div className="flex items-center gap-2">
+          {/* 绝对居中标题 */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none">
             <span style={{ color: 'var(--t-gold)', opacity: 0.4 }} className="text-xs">☯</span>
             <span className="text-xs tracking-[0.3em]" style={{ color: 'var(--t-gold)' }}>紫微命盘</span>
           </div>
@@ -160,13 +226,37 @@ export default function ChartPage() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             {chart && (
-              <button
-                onClick={handleReset}
-                className="text-[10px] transition-colors border px-2.5 py-1 rounded-full"
-                style={{ color: 'var(--t-gold)', borderColor: 'var(--t-border-acc)', opacity: 0.8 }}
-              >
-                重新起盘
-              </button>
+              <>
+                {/* 分享按钮 */}
+                <motion.button
+                  onClick={handleShare}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-[10px] transition-colors border px-2.5 py-1 rounded-full"
+                  style={{
+                    color: copied ? '#4ade80' : 'var(--t-gold)',
+                    borderColor: copied ? 'rgba(74,222,128,0.4)' : 'var(--t-border-acc)',
+                    opacity: 0.9,
+                  }}
+                >
+                  {copied ? '已复制 ✓' : '分享链接'}
+                </motion.button>
+                {/* 导出 PDF */}
+                <button
+                  onClick={() => window.print()}
+                  className="text-[10px] transition-colors border px-2.5 py-1 rounded-full"
+                  style={{ color: 'var(--t-faint)', borderColor: 'var(--t-border)', opacity: 0.7 }}
+                >
+                  导出
+                </button>
+                {/* 重新起盘 */}
+                <button
+                  onClick={handleReset}
+                  className="text-[10px] transition-colors border px-2.5 py-1 rounded-full"
+                  style={{ color: 'var(--t-gold)', borderColor: 'var(--t-border-acc)', opacity: 0.8 }}
+                >
+                  重新起盘
+                </button>
+              </>
             )}
           </div>
         </header>
@@ -203,7 +293,14 @@ export default function ChartPage() {
                   onSubmit={handleSubmit}
                   loading={loading}
                   initialData={savedForm ?? undefined}
-                  onFormSave={setSavedForm}
+                  onFormSave={form => {
+                    setSavedForm(form);
+                    saveHistory(form);
+                    const params = formToSearchParams(form);
+                    if (typeof window !== 'undefined') {
+                      window.history.replaceState({}, '', `/chart?${params.toString()}`);
+                    }
+                  }}
                 />
                 {error && (
                   <motion.div
@@ -212,6 +309,55 @@ export default function ChartPage() {
                     className="mt-3 p-3 bg-red-950/20 border border-red-800/30 rounded-xl text-red-400/80 text-xs text-center"
                   >
                     {error}
+                  </motion.div>
+                )}
+
+                {/* ── 历史命盘 ── */}
+                {history.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="mt-8"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-[9px] tracking-[0.4em]" style={{ color: 'var(--t-faint)' }}>历史命盘</span>
+                      <div className="flex-1 h-px" style={{ background: 'var(--t-border)' }} />
+                    </div>
+                    <div className="space-y-1.5">
+                      {history.map(entry => (
+                        <motion.div
+                          key={entry.id}
+                          layout
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer group"
+                          style={{
+                            background: 'var(--t-surface)',
+                            border: '1px solid var(--t-border)',
+                            transition: 'border-color 0.2s',
+                          }}
+                          onClick={() => handleLoadHistory(entry.form)}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--t-border-acc)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--t-border)'; }}
+                        >
+                          <span className="text-[9px]" style={{ color: 'var(--t-gold)', opacity: 0.5 }}>☯</span>
+                          <span className="text-[11px] flex-1 truncate" style={{ color: 'var(--t-text2)' }}>
+                            {entry.label}
+                          </span>
+                          <span className="text-[9px] hidden group-hover:inline" style={{ color: 'var(--t-gold)' }}>
+                            重新起盘
+                          </span>
+                          <button
+                            onClick={e => { e.stopPropagation(); removeHistory(entry.id); }}
+                            className="text-[11px] ml-1 opacity-0 group-hover:opacity-100 transition-opacity leading-none"
+                            style={{ color: 'var(--t-faint)' }}
+                          >
+                            ×
+                          </button>
+                        </motion.div>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </motion.div>
@@ -230,7 +376,12 @@ export default function ChartPage() {
 
                     {/* ── 左栏: 命盘 ── */}
                     <div>
-                      <ChartBoard chart={chart} onStarSelect={handleStarSelect} />
+                      <ChartBoard
+                        chart={chart}
+                        onStarSelect={handleStarSelect}
+                        onPalaceSelect={handlePalaceSelect}
+                        onSiHuaClick={handleSiHuaClick}
+                      />
                     </div>
 
                     {/* ── 中栏: 命格摘要 ── */}
@@ -238,9 +389,9 @@ export default function ChartPage() {
                       <ChartSummary chart={chart} />
                     </div>
 
-                    {/* ── 右栏: AI解读 / 星曜详情 / 风水 ── */}
-                    <div className="lg:sticky lg:top-16" style={{ height: 'calc(100vh - 80px)', maxHeight: '800px' }}>
-                      {/* 切换标签 — 圆角胶囊式 */}
+                    {/* ── 右栏: 洞察工作区 ── */}
+                    <div className="no-print lg:sticky lg:top-16" style={{ height: 'calc(100vh - 80px)', maxHeight: '800px' }}>
+                      {/* 切换标签 */}
                       <div
                         className="flex mb-3 rounded-xl overflow-hidden p-1 gap-1"
                         style={{ background: 'var(--t-surface)', border: '1px solid var(--t-border)' }}
@@ -250,7 +401,7 @@ export default function ChartPage() {
                           return (
                             <button
                               key={tab.key}
-                              onClick={() => setRightPanel(tab.key as 'ai' | 'detail' | 'fengshui')}
+                              onClick={() => setRightPanel(tab.key as 'ai' | 'detail')}
                               className="relative flex-1 py-2 text-[11px] font-medium rounded-lg transition-all duration-200"
                               style={{
                                 background: isActive
@@ -277,11 +428,7 @@ export default function ChartPage() {
                         <AnimatePresence mode="wait">
                           {rightPanel === 'ai' ? (
                             <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
-                              <ChatPanel chart={chart} />
-                            </motion.div>
-                          ) : rightPanel === 'fengshui' ? (
-                            <motion.div key="fengshui" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full">
-                              <FengShuiPanel chart={chart} />
+                              <InsightPanel chart={chart} selectedPalace={selectedPalace} selectedSiHua={selectedSiHua} />
                             </motion.div>
                           ) : (
                             <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full overflow-y-auto">
@@ -292,9 +439,7 @@ export default function ChartPage() {
                                   onClose={() => { setSelectedStar(null); setRightPanel('ai'); }}
                                 />
                               ) : (
-                                <div
-                                  className="h-full flex flex-col items-center justify-center text-center p-8 rounded-xl card-glass"
-                                >
+                                <div className="h-full flex flex-col items-center justify-center text-center p-8 rounded-xl card-glass">
                                   <div className="text-4xl mb-4" style={{ color: 'var(--t-gold)', opacity: 0.15 }}>✦</div>
                                   <p className="text-xs leading-relaxed" style={{ color: 'var(--t-faint)' }}>
                                     点击命盘中任意<br />
@@ -310,20 +455,54 @@ export default function ChartPage() {
                     </div>
                   </div>
 
-                  {/* 移动端下方星曜详情 */}
-                  {selectedStar && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-4 lg:hidden"
-                    >
-                      <StarDetailPanel
-                        star={selectedStar}
-                        palaceName={selectedStarPalace}
-                        onClose={() => setSelectedStar(null)}
-                      />
-                    </motion.div>
-                  )}
+                  {/* 移动端：底部抽屉 */}
+                  <AnimatePresence>
+                    {selectedStar && (
+                      <>
+                        <motion.div
+                          key="drawer-mask"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          onClick={() => setSelectedStar(null)}
+                          className="fixed inset-0 z-40 lg:hidden no-print"
+                          style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)' }}
+                        />
+                        <motion.div
+                          key="drawer-body"
+                          initial={{ y: '100%' }}
+                          animate={{ y: 0 }}
+                          exit={{ y: '100%' }}
+                          transition={{ type: 'spring', stiffness: 340, damping: 38 }}
+                          drag="y"
+                          dragConstraints={{ top: 0 }}
+                          dragElastic={{ top: 0, bottom: 0.3 }}
+                          onDragEnd={(_, info) => { if (info.offset.y > 80) setSelectedStar(null); }}
+                          className="fixed bottom-0 left-0 right-0 z-50 lg:hidden rounded-t-2xl overflow-hidden no-print"
+                          style={{
+                            background: 'var(--t-surface, var(--t-bg))',
+                            border: '1px solid var(--t-border)',
+                            borderBottom: 'none',
+                            maxHeight: '78vh',
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <div className="flex justify-center pt-3 pb-1 flex-shrink-0" style={{ cursor: 'grab' }}>
+                            <div className="w-10 h-1 rounded-full" style={{ background: 'var(--t-border-acc)', opacity: 0.5 }} />
+                          </div>
+                          <div className="overflow-y-auto flex-1 pb-safe">
+                            <StarDetailPanel
+                              star={selectedStar}
+                              palaceName={selectedStarPalace}
+                              onClose={() => setSelectedStar(null)}
+                            />
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.div>
             )}

@@ -263,6 +263,10 @@ export default function HomePage() {
             style={{
               border: `1px solid ${c.goldLine}`,
               color: c.goldSolid,
+              background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(255,252,242,0.85)',
+              boxShadow: theme === 'dark'
+                ? 'inset 0 1px 0 rgba(255,255,255,0.06)'
+                : 'inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 8px rgba(140,100,20,0.1)',
             }}
           >
             立即起盘
@@ -271,99 +275,108 @@ export default function HomePage() {
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-20">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-20">
+      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-32">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-3xl mx-auto mt-16">
 
           {/* 标签行 */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex items-center justify-center gap-3 mb-10">
-            <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-            <span className="text-[11px] tracking-[0.5em] uppercase transition-colors duration-300"
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="flex items-center justify-center gap-3 mb-12">
+            <div className="h-px w-10" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
+            <span className="text-[10px] tracking-[0.55em] uppercase transition-colors duration-300"
               style={{ color: c.tagText }}>
               Zi Wei Dou Shu · AI Divination
             </span>
-            <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
+            <div className="h-px w-10" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
           </motion.div>
 
           {/* 主标题 */}
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className={`grad-text font-bold leading-none mb-6 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
-            style={{
-              fontSize: 'clamp(64px, 12vw, 140px)',
-              letterSpacing: '0.08em',
-            }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className={`grad-text font-bold leading-none mb-8 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+            style={{ fontSize: 'clamp(72px, 14vw, 148px)', letterSpacing: '0.08em' }}>
             紫微命盘
           </motion.h1>
 
           {/* 副标题 */}
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-            className="text-lg md:text-xl tracking-widest mb-4 transition-colors duration-300"
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55, ease: 'easeOut' }}
+            className="text-base md:text-lg tracking-[0.3em] mb-16 transition-colors duration-300"
             style={{ color: c.textSecond }}>
             倪海夏正宗体系 · AI 深度解读
           </motion.p>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.65 }}
-            className="text-sm max-w-lg mx-auto leading-relaxed mb-12 transition-colors duration-300"
-            style={{ color: c.textMuted }}>
-            输入出生年月日时，生成专属紫微斗数命盘<br />
-            依据倪海夏老师完整教学体系，AI 解读你的命格与运势
-          </motion.p>
-
-          {/* CTA */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.85 }}
-            className="flex flex-col items-center gap-3">
+          {/* CTA 区域 */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+            className="flex flex-col items-center gap-4 mb-20">
             <motion.button
-              whileHover={{ scale: 1.03, boxShadow: `0 0 40px ${c.glowTint}` }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => router.push('/chart')}
-              className="px-12 py-4 font-semibold text-base tracking-widest rounded-full transition-all duration-300"
-              style={{ background: c.ctaBg, color: c.ctaText }}>
-              立即起盘
+              className="relative flex items-center justify-center gap-2 px-14 py-5 font-semibold text-base tracking-widest rounded-full transition-all duration-300"
+              style={{
+                background: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(255,252,242,0.88)',
+                color: c.goldSolid,
+                border: `1.5px solid ${c.goldLine}`,
+                boxShadow: theme === 'dark'
+                  ? 'inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(212,168,67,0.15)'
+                  : 'inset 0 1px 0 rgba(255,255,255,0.95), 0 4px 20px rgba(140,100,20,0.12)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+              }}>
+              <span>立即起盘</span>
+              <span style={{ fontSize: '15px', lineHeight: 1 }}>→</span>
             </motion.button>
-            <p className="text-[10px] tracking-wider transition-colors duration-300"
+            <p className="text-[10px] tracking-[0.25em] transition-colors duration-300"
               style={{ color: c.textFaint }}>
-              完全免费 · 无需注册 · 基于倪海夏老师教学体系
+              完全免费 · 无需注册 · 30 秒生成命盘
             </p>
           </motion.div>
 
-          {/* 十四主星 */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-20 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
-            {STARS.map((star, i) => (
-              <motion.div key={star.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.1 + i * 0.04, duration: 0.4 }}
-                className="group flex items-center gap-1 px-2.5 py-1 rounded-full cursor-default transition-all duration-200"
-                style={{
-                  background: c.starBg,
-                  border: `1px solid ${c.starBorder}`,
-                  boxShadow: theme === 'light' ? '0 1px 4px rgba(140,100,20,0.08)' : 'none',
-                }}>
-                <span className="text-[11px] transition-colors duration-200"
-                  style={{ color: c.starText }}>{star.name}</span>
-                <span className="text-[9px] transition-colors duration-200"
-                  style={{ color: c.starNature }}>{star.nature}</span>
+          {/* 三条价值主张 */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.15, duration: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+            {[
+              { icon: '⊙', label: '正宗起盘', desc: '倪海夏体系，非简化版' },
+              { icon: '◈', label: 'AI 深度解读', desc: '六维命格 · 大限流年' },
+              { icon: '◇', label: '完全免费', desc: '无需注册，即开即用' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 + i * 0.12, duration: 0.5 }}
+                className="flex flex-col items-center gap-1.5">
+                <span className="text-lg transition-colors duration-300" style={{ color: c.goldSolid, opacity: 0.7 }}>{item.icon}</span>
+                <span className="text-[12px] font-medium tracking-wide transition-colors duration-300" style={{ color: c.textPrimary }}>{item.label}</span>
+                <span className="text-[10px] transition-colors duration-300" style={{ color: c.textMuted }}>{item.desc}</span>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
 
         {/* 滚动提示 */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-[9px] tracking-[0.4em] uppercase transition-colors duration-300"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.2, duration: 1.2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[9px] tracking-[0.45em] uppercase transition-colors duration-300"
             style={{ color: c.scrollText }}>探索更多</span>
-          <motion.div animate={{ y: [0, 6, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            className="w-px h-8 transition-all duration-300"
+          <motion.div
+            animate={{ y: [0, 7, 0] }}
+            transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+            className="w-px h-9 transition-all duration-300"
             style={{ background: `linear-gradient(to bottom, ${c.scrollLine}, transparent)` }} />
         </motion.div>
       </section>
@@ -396,7 +409,7 @@ export default function HomePage() {
           style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%)' }} />
 
         <FadeIn>
-          <div className="relative max-w-4xl mx-auto text-center">
+          <div className="relative max-w-4xl mx-auto" style={{ textAlign: 'center' }}>
 
             {/* 标签 */}
             <motion.div

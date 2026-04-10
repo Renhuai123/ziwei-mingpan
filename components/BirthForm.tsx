@@ -1,6 +1,6 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { BirthInfo } from '@/lib/ziwei/types';
 import { SHICHEN } from '@/lib/ziwei/constants';
 import { useTheme } from '@/components/ThemeProvider';
@@ -32,10 +32,17 @@ const SHICHEN_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '
 /** 根据北京时间 + 经度计算真太阳时时辰支 (0-11) */
 function calcTrueSolarBranch(clockHour: number, clockMinute: number, longitude: number): number {
   const clockMins = clockHour * 60 + clockMinute;
-  const offset = (longitude - 120) * 4; // 每度4分钟
+  const offset = (longitude - 120) * 4;
   const solar = ((clockMins + offset) % 1440 + 1440) % 1440;
-  if (solar >= 1380 || solar < 60) return 0; // 子时
+  if (solar >= 1380 || solar < 60) return 0;
   return Math.floor((solar - 60) / 120) + 1;
+}
+
+/** 检查日期是否合法 */
+function isValidDate(y: number, m: number, d: number): boolean {
+  if (!y || !m || !d) return false;
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
 }
 
 export default function BirthForm({ onSubmit, loading, initialData, onFormSave }: BirthFormProps) {
@@ -56,13 +63,14 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
     gender: initialData?.gender ?? 'male',
   });
 
-  // 根据省份动态生成城市列表
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
   const cityList = useMemo(() => {
     const prov = PROVINCES.find(p => p.name === form.province);
     return prov ? prov.cities : [];
   }, [form.province]);
 
-  // 计算真太阳时时辰支
   const branch = useMemo(() => {
     if (form.unknownTime) return 0;
     return calcTrueSolarBranch(
@@ -75,15 +83,46 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
   const offsetMin = Math.round((form.longitude - 120) * 4);
   const shichenInfo = SHICHEN[branch];
 
+  // ─── 校验逻辑 ───────────────────────────────────────────
+  const y = parseInt(form.year) || 0;
+  const m = parseInt(form.month) || 0;
+  const d = parseInt(form.day) || 0;
+
+  const errors = {
+    year: !form.year ? '请选择出生年份'
+      : y < 1900 || y > 2026 ? '年份范围：1900–2026'
+      : '',
+    month: !form.month ? '请选择月份' : '',
+    day: !form.day ? '请选择日期'
+      : form.year && form.month && !isValidDate(y, m, d) ? `${m}月没有${d}日`
+      : '',
+  };
+  const hasError = Object.values(errors).some(Boolean);
+
+  // ─── 完成度（用于进度条） ────────────────────────────────
+  const steps = [
+    !!form.year && !!form.month && !!form.day && !errors.year && !errors.month && !errors.day,
+    !!form.province && !!form.city,
+    form.unknownTime || (!!form.clockHour && !!form.clockMinute),
+    true, // 性别有默认值
+  ];
+  const completedSteps = steps.filter(Boolean).length;
+
+  // ─── Summary chip：全部必填完成后显示 ───────────────────
+  const showSummary = steps[0] && steps[2] && !hasError;
+  const summaryText = showSummary
+    ? [
+        `${y}年${m}月${d}日`,
+        form.city || (form.province ? form.province : ''),
+        form.unknownTime ? '时辰不详' : `${SHICHEN_NAMES[branch]}时`,
+        form.gender === 'male' ? '男' : '女',
+      ].filter(Boolean).join(' · ')
+    : '';
+
   const handleProvince = (prov: string) => {
     const provData = PROVINCES.find(p => p.name === prov);
     const firstCity = provData?.cities[0];
-    setForm({
-      ...form,
-      province: prov,
-      city: firstCity?.name || '',
-      longitude: firstCity?.longitude ?? 120,
-    });
+    setForm({ ...form, province: prov, city: firstCity?.name || '', longitude: firstCity?.longitude ?? 120 });
   };
 
   const handleCity = (cityName: string) => {
@@ -94,50 +133,62 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const y = parseInt(form.year);
-    const m = parseInt(form.month);
-    const d = parseInt(form.day);
-    if (!y || !m || !d || y < 1900 || y > 2050) return;
+    setSubmitAttempted(true);
+    setTouched({ year: true, month: true, day: true });
+    if (hasError) return;
     onFormSave?.({ ...form });
-    onSubmit({
-      year: y, month: m, day: d,
-      hour: branch,
-      gender: form.gender,
-      name: form.name || undefined,
-      province: form.province || undefined,
-      city: form.city || undefined,
-      longitude: form.province ? form.longitude : undefined,
-    });
+    onSubmit({ year: y, month: m, day: d, hour: branch, gender: form.gender, name: form.name || undefined, province: form.province || undefined, city: form.city || undefined, longitude: form.province ? form.longitude : undefined });
   };
 
-  // ─── 主题自适应样式 ──────────────────────────────────────
-  const formClass = isDark
-    ? 'bg-space-800/80 border-palace-border/50'
-    : 'bg-white/90 border-amber-200/60 shadow-lg shadow-amber-100/40';
+  // ─── 样式变量 ────────────────────────────────────────────
+  const bg = isDark ? 'rgba(8,16,40,0.85)' : 'rgba(255,255,255,0.92)';
+  const border = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(200,160,60,0.2)';
+  const labelClr = isDark ? 'rgba(74,112,144,1)' : 'rgba(120,80,10,0.55)';
+  const inputBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,252,240,0.8)';
+  const inputBorder = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(200,160,60,0.25)';
+  const inputClr = isDark ? '#c8d8f0' : '#2a1a00';
+  const focusBorder = isDark ? 'rgba(212,168,67,0.5)' : 'rgba(180,120,20,0.5)';
+  const errorClr = isDark ? '#f87171' : '#dc2626';
+  const panelBg = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255,250,235,0.7)';
+  const panelBorder = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(200,160,60,0.2)';
+  const goldText = isDark ? '#d4a843' : '#7a5008';
+  const summaryBg = isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.07)';
+  const summaryBorder = isDark ? 'rgba(37,99,235,0.35)' : 'rgba(37,99,235,0.25)';
+  const summaryClr = isDark ? 'rgba(147,197,253,0.9)' : 'rgba(37,99,235,0.85)';
 
-  const titleClass = isDark ? 'text-gold' : 'text-amber-700';
+  const inputStyle = {
+    background: inputBg,
+    border: `1px solid ${inputBorder}`,
+    color: inputClr,
+    borderRadius: '14px',
+    padding: '10px 14px',
+    fontSize: '13px',
+    width: '100%',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+  } as React.CSSProperties;
 
-  const labelClass = isDark
-    ? 'block text-[11px] text-[#4a7090] mb-2 tracking-wide'
-    : 'block text-[11px] text-amber-800/60 mb-2 tracking-wide';
+  const errorInputStyle = { ...inputStyle, borderColor: errorClr };
 
-  const inputClass = isDark
-    ? 'w-full bg-space-700 border border-palace-border text-slate-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-gold/50 focus:bg-space-600 transition-colors placeholder-slate-600'
-    : 'w-full bg-amber-50/50 border border-amber-200/60 text-gray-700 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400/70 focus:bg-white transition-colors placeholder-gray-400';
+  function FieldError({ msg }: { msg: string }) {
+    return (
+      <AnimatePresence>
+        {msg && (
+          <motion.p
+            initial={{ opacity: 0, y: -4, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -4, height: 0 }}
+            transition={{ duration: 0.18 }}
+            style={{ color: errorClr, fontSize: '11px', marginTop: '4px' }}
+          >
+            ✕ {msg}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    );
+  }
 
-  const noteClass = isDark ? 'text-[10px] text-[#2a4060] mt-1.5' : 'text-[10px] text-amber-700/40 mt-1.5';
-  const infoClass = isDark ? 'text-[10px] text-[#2a5070] mt-1.5' : 'text-[10px] text-amber-700/50 mt-1.5';
-
-  const timePanelClass = isDark
-    ? 'rounded-2xl p-3 bg-space-700/40 border border-palace-border/30'
-    : 'rounded-2xl p-3 bg-amber-50/60 border border-amber-200/40';
-
-  const shichenResultClass = isDark ? 'text-gold font-semibold tracking-wide' : 'text-amber-600 font-semibold tracking-wide';
-  const shichenSubClass = isDark ? 'text-[11px] text-[#3a6080]' : 'text-[11px] text-amber-600/60';
-
-  const checkboxLabelClass = isDark
-    ? 'text-[10px] text-[#3a5070] cursor-pointer'
-    : 'text-[10px] text-amber-700/50 cursor-pointer';
+  const showErr = (field: string) => touched[field] || submitAttempted;
 
   return (
     <motion.form
@@ -145,72 +196,98 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`border rounded-3xl p-7 backdrop-blur-sm ${formClass}`}
+      style={{ background: bg, border: `1px solid ${border}`, borderRadius: '24px', padding: '28px', backdropFilter: 'blur(20px)' }}
     >
-      <h3 className={`text-sm font-medium tracking-widest mb-5 text-center ${titleClass}`}>
+      {/* 标题 */}
+      <h3 style={{ color: goldText, fontSize: '12px', letterSpacing: '0.4em', textAlign: 'center', marginBottom: '20px', fontWeight: 500 }}>
         ── 输入生辰八字 ──
       </h3>
 
-      {/* 姓名 */}
-      <div className="mb-4">
-        <label className={labelClass}>姓名（可选）</label>
+      {/* ── 进度条 ── */}
+      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>
+        {steps.map((done, i) => (
+          <motion.div
+            key={i}
+            animate={{ background: done ? (isDark ? '#d4a843' : '#b07820') : (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(200,160,60,0.15)') }}
+            transition={{ duration: 0.3 }}
+            style={{ flex: 1, height: '2px', borderRadius: '2px' }}
+          />
+        ))}
+      </div>
+
+      {/* ── 姓名 ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>姓名（可选）</label>
         <input
           type="text"
           placeholder="请输入姓名"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
-          className={inputClass}
+          style={inputStyle}
+          onFocus={e => { e.target.style.borderColor = focusBorder; }}
+          onBlur={e => { e.target.style.borderColor = inputBorder; }}
         />
       </div>
 
-      {/* 出生日期 */}
-      <div className="mb-4">
-        <label className={labelClass}>出生日期（公历）</label>
-        <div className="grid grid-cols-3 gap-2">
-          <select
-            value={form.year}
-            onChange={e => setForm({ ...form, year: e.target.value })}
-            className={inputClass}
-            required
-          >
-            <option value="">年份</option>
-            {Array.from({ length: 71 }, (_, i) => 2026 - i).map(y => (
-              <option key={y} value={String(y)}>{y} 年</option>
-            ))}
-          </select>
-          <select
-            value={form.month}
-            onChange={e => setForm({ ...form, month: e.target.value })}
-            className={inputClass}
-            required
-          >
-            <option value="">月份</option>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-              <option key={m} value={String(m)}>{m} 月</option>
-            ))}
-          </select>
-          <select
-            value={form.day}
-            onChange={e => setForm({ ...form, day: e.target.value })}
-            className={inputClass}
-            required
-          >
-            <option value="">日期</option>
-            {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-              <option key={d} value={String(d)}>{d} 日</option>
-            ))}
-          </select>
+      {/* ── 出生日期 ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生日期（公历）</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+          <div>
+            <select
+              value={form.year}
+              onChange={e => { setForm({ ...form, year: e.target.value }); setTouched(t => ({ ...t, year: true })); }}
+              style={showErr('year') && errors.year ? errorInputStyle : inputStyle}
+              required
+            >
+              <option value="">年份</option>
+              {Array.from({ length: 127 }, (_, i) => 2026 - i).map(yr => (
+                <option key={yr} value={String(yr)}>{yr}</option>
+              ))}
+            </select>
+            <FieldError msg={showErr('year') ? errors.year : ''} />
+          </div>
+          <div>
+            <select
+              value={form.month}
+              onChange={e => { setForm({ ...form, month: e.target.value }); setTouched(t => ({ ...t, month: true })); }}
+              style={showErr('month') && errors.month ? errorInputStyle : inputStyle}
+              required
+            >
+              <option value="">月份</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(mo => (
+                <option key={mo} value={String(mo)}>{mo} 月</option>
+              ))}
+            </select>
+            <FieldError msg={showErr('month') ? errors.month : ''} />
+          </div>
+          <div>
+            <select
+              value={form.day}
+              onChange={e => { setForm({ ...form, day: e.target.value }); setTouched(t => ({ ...t, day: true })); }}
+              style={showErr('day') && errors.day ? errorInputStyle : inputStyle}
+              required
+            >
+              <option value="">日期</option>
+              {Array.from({ length: 31 }, (_, i) => i + 1).map(dy => (
+                <option key={dy} value={String(dy)}>{dy} 日</option>
+              ))}
+            </select>
+            <FieldError msg={showErr('day') ? errors.day : ''} />
+          </div>
         </div>
       </div>
 
-      {/* 出生地点 */}
-      <div className="mb-4">
-        <label className={labelClass}>出生地点（用于真太阳时校正）</label>
-        <div className="grid grid-cols-2 gap-2">
+      {/* ── 出生地点 ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生地点（用于真太阳时校正）</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <select
             value={form.province}
             onChange={e => handleProvince(e.target.value)}
-            className={inputClass}
+            style={inputStyle}
+            onFocus={e => { e.target.style.borderColor = focusBorder; }}
+            onBlur={e => { e.target.style.borderColor = inputBorder; }}
           >
             <option value="">省份 / 直辖市</option>
             {PROVINCES.map(p => (
@@ -220,8 +297,10 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
           <select
             value={form.city}
             onChange={e => handleCity(e.target.value)}
-            className={`${inputClass} ${!form.province ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!form.province}
+            style={{ ...inputStyle, opacity: form.province ? 1 : 0.45 }}
+            onFocus={e => { e.target.style.borderColor = focusBorder; }}
+            onBlur={e => { e.target.style.borderColor = inputBorder; }}
           >
             <option value="">{form.province ? '城市' : '先选省份'}</option>
             {cityList.map(c => (
@@ -229,128 +308,178 @@ export default function BirthForm({ onSubmit, loading, initialData, onFormSave }
             ))}
           </select>
         </div>
-        {form.province ? (
-          <p className={infoClass}>
-            {form.city || '（请选择城市）'} · 经度 {form.longitude.toFixed(1)}°E
-            · 时差&nbsp;
-            <span className="font-medium">
-              {offsetMin > 0 ? '+' : ''}{offsetMin} 分钟
-            </span>
-          </p>
-        ) : (
-          <p className={noteClass}>
-            * 倪海夏批命用真太阳时，建议填写出生地以自动校正时辰
-          </p>
-        )}
+        <AnimatePresence mode="wait">
+          {form.province ? (
+            <motion.p
+              key="location-info"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ fontSize: '10px', color: isDark ? 'rgba(60,120,160,1)' : 'rgba(100,70,10,0.5)', marginTop: '5px' }}
+            >
+              {form.city || '（请选择城市）'} · 经度 {form.longitude.toFixed(1)}°E · 时差 {offsetMin > 0 ? '+' : ''}{offsetMin} 分钟
+            </motion.p>
+          ) : (
+            <motion.p
+              key="location-hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ fontSize: '10px', color: isDark ? 'rgba(42,64,96,1)' : 'rgba(140,100,20,0.45)', marginTop: '5px' }}
+            >
+              * 倪海夏批命用真太阳时，建议填写出生地以自动校正时辰
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* 出生时间 */}
-      <div className="mb-4">
-        <label className={labelClass}>出生时间（北京时间）</label>
-        <div className={`${timePanelClass} ${form.unknownTime ? 'opacity-50 pointer-events-none' : ''}`}>
-          <div className="grid grid-cols-2 gap-2 mb-2">
+      {/* ── 出生时间 ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>出生时间（北京时间）</label>
+        <div style={{ borderRadius: '14px', padding: '12px', background: panelBg, border: `1px solid ${panelBorder}`, opacity: form.unknownTime ? 0.45 : 1, pointerEvents: form.unknownTime ? 'none' : 'auto', transition: 'opacity 0.2s' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
             <select
               value={form.clockHour}
               onChange={e => setForm({ ...form, clockHour: e.target.value })}
-              className={inputClass}
+              style={inputStyle}
             >
               {Array.from({ length: 24 }, (_, i) => i).map(h => (
-                <option key={h} value={String(h)}>
-                  {h.toString().padStart(2, '0')} 时
-                </option>
+                <option key={h} value={String(h)}>{h.toString().padStart(2, '0')} 时</option>
               ))}
             </select>
             <select
               value={form.clockMinute}
               onChange={e => setForm({ ...form, clockMinute: e.target.value })}
-              className={inputClass}
+              style={inputStyle}
             >
               {Array.from({ length: 60 }, (_, i) => i).map(min => (
-                <option key={min} value={String(min)}>
-                  {min.toString().padStart(2, '0')} 分
-                </option>
+                <option key={min} value={String(min)}>{min.toString().padStart(2, '0')} 分</option>
               ))}
             </select>
           </div>
           {/* 真太阳时结果 */}
-          <div className="text-center py-1">
-            <span className={shichenSubClass}>真太阳时 →</span>
-            <span className={`ml-1.5 text-[15px] ${shichenResultClass}`}>
+          <div style={{ textAlign: 'center', padding: '4px 0' }}>
+            <span style={{ fontSize: '10px', color: isDark ? 'rgba(42,80,112,1)' : 'rgba(140,100,20,0.5)' }}>真太阳时 → </span>
+            <span style={{ fontSize: '15px', color: goldText, fontWeight: 600, letterSpacing: '0.08em' }}>
               {SHICHEN_NAMES[branch]}时
             </span>
             {shichenInfo && (
-              <span className={`ml-1 ${shichenSubClass}`}>
+              <span style={{ fontSize: '10px', color: isDark ? 'rgba(42,80,112,1)' : 'rgba(140,100,20,0.5)', marginLeft: '4px' }}>
                 （{shichenInfo.range}）
               </span>
             )}
           </div>
         </div>
-        <label className="flex items-center gap-2 mt-2 cursor-pointer">
+        <label style={{ display: 'flex', alignItems: 'center', gap: '7px', marginTop: '8px', cursor: 'pointer' }}>
           <input
             type="checkbox"
             checked={form.unknownTime}
             onChange={e => setForm({ ...form, unknownTime: e.target.checked })}
-            className="w-3.5 h-3.5 rounded cursor-pointer"
+            style={{ width: '14px', height: '14px', borderRadius: '4px', cursor: 'pointer' }}
           />
-          <span className={checkboxLabelClass}>
+          <span style={{ fontSize: '10px', color: isDark ? 'rgba(58,80,112,1)' : 'rgba(140,100,20,0.45)' }}>
             不知道出生时间，以子时（23:00–01:00）起盘
           </span>
         </label>
       </div>
 
-      {/* 性别 */}
-      <div className="mb-5">
-        <label className={labelClass}>性别</label>
-        <div className="flex gap-3">
-          {/* 男 — 蓝色主题 */}
-          <button
-            type="button"
-            onClick={() => setForm({ ...form, gender: 'male' })}
-            className={`flex-1 py-3 rounded-2xl text-sm border font-medium transition-all ${
-              form.gender === 'male'
-                ? isDark
-                  ? 'border-blue-400/70 text-blue-300 bg-blue-500/10'
-                  : 'border-blue-400/60 text-blue-600 bg-blue-50'
-                : isDark
-                  ? 'border-palace-border text-slate-500 hover:border-blue-400/40 hover:text-blue-400/60'
-                  : 'border-amber-200/60 text-gray-400 hover:border-blue-300/60 hover:text-blue-500/60'
-            }`}
-          >
-            ♂ 男
-          </button>
-          {/* 女 — 玫瑰色主题 */}
-          <button
-            type="button"
-            onClick={() => setForm({ ...form, gender: 'female' })}
-            className={`flex-1 py-3 rounded-2xl text-sm border font-medium transition-all ${
-              form.gender === 'female'
-                ? isDark
-                  ? 'border-rose-400/70 text-rose-300 bg-rose-500/10'
-                  : 'border-rose-400/60 text-rose-600 bg-rose-50'
-                : isDark
-                  ? 'border-palace-border text-slate-500 hover:border-rose-400/40 hover:text-rose-400/60'
-                  : 'border-amber-200/60 text-gray-400 hover:border-rose-300/60 hover:text-rose-500/60'
-            }`}
-          >
-            ♀ 女
-          </button>
+      {/* ── 性别 ── */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ display: 'block', fontSize: '11px', color: labelClr, marginBottom: '6px', letterSpacing: '0.05em' }}>性别</label>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {(['male', 'female'] as const).map(g => {
+            const active = form.gender === g;
+            const isMale = g === 'male';
+            const accent = isMale ? '37,99,235' : '225,29,72';
+            return (
+              <motion.button
+                key={g}
+                type="button"
+                onClick={() => setForm({ ...form, gender: g })}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  flex: 1,
+                  padding: '11px',
+                  borderRadius: '14px',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  border: `1px solid ${active ? `rgba(${accent},0.6)` : inputBorder}`,
+                  background: active ? `rgba(${accent},0.08)` : inputBg,
+                  color: active ? `rgba(${accent},0.9)` : (isDark ? 'rgba(180,190,210,0.4)' : 'rgba(100,80,40,0.4)'),
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+              >
+                {isMale ? '♂ 男' : '♀ 女'}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
-      {/* 提交 */}
-      <button
+      {/* ── 确认信息 Summary Chip ── */}
+      <AnimatePresence>
+        {showSummary && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto', marginBottom: 12 }}
+            exit={{ opacity: 0, y: -8, height: 0, marginBottom: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <div style={{
+              background: summaryBg,
+              border: `1px solid ${summaryBorder}`,
+              borderRadius: '12px',
+              padding: '9px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}>
+              <span style={{ fontSize: '12px', color: summaryClr }}>✓</span>
+              <span style={{ fontSize: '11px', color: summaryClr, letterSpacing: '0.03em', flex: 1 }}>
+                {summaryText}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── 提交按钮 ── */}
+      <motion.button
         type="submit"
         disabled={loading}
-        className={`w-full py-3.5 rounded-2xl text-sm font-medium tracking-widest transition-all ${
-          loading
-            ? 'bg-gold/20 text-gold/50 cursor-not-allowed'
-            : isDark
-              ? 'bg-gradient-to-r from-gold/80 to-gold-bright/80 text-space-950 hover:from-gold hover:to-gold-bright active:scale-95'
-              : 'bg-gradient-to-r from-amber-500 to-amber-400 text-white hover:from-amber-600 hover:to-amber-500 active:scale-95 shadow-md shadow-amber-200/50'
-        }`}
+        whileHover={loading ? {} : { scale: 1.01 }}
+        whileTap={loading ? {} : { scale: 0.98 }}
+        style={{
+          width: '100%',
+          padding: '14px',
+          borderRadius: '16px',
+          fontSize: '13px',
+          fontWeight: 600,
+          letterSpacing: '0.15em',
+          border: 'none',
+          cursor: loading ? 'not-allowed' : 'pointer',
+          background: loading
+            ? (isDark ? 'rgba(212,168,67,0.15)' : 'rgba(180,120,20,0.15)')
+            : (isDark
+              ? 'linear-gradient(135deg, rgba(180,130,40,0.9), rgba(240,200,80,0.9))'
+              : 'linear-gradient(135deg, #9a6210, #c88020)'),
+          color: loading ? (isDark ? 'rgba(212,168,67,0.4)' : 'rgba(120,80,10,0.4)') : (isDark ? '#08080a' : '#fff8e8'),
+          boxShadow: loading ? 'none' : (isDark ? '0 4px 20px rgba(212,168,67,0.2)' : '0 4px 16px rgba(140,100,20,0.25)'),
+          transition: 'all 0.2s',
+        }}
       >
-        {loading ? '紫微起盘中...' : '立即起盘 · 解命运密码'}
-      </button>
+        {loading ? (
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+              style={{ display: 'inline-block', width: '12px', height: '12px', border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%' }}
+            />
+            紫微起盘中…
+          </span>
+        ) : '立即起盘 · 解命运密码'}
+      </motion.button>
     </motion.form>
   );
 }
