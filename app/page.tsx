@@ -74,25 +74,15 @@ function ThemeToggle() {
   );
 }
 
-const FRONT_SECTIONS = [
-  {
-    label: '这是什么',
-    title: '一份可阅读、可行动的紫微命盘',
-    body: '输入出生信息后，系统生成完整命盘，并将星曜、宫位、四化关系整理为可直接理解的决策线索。',
-    emphasis: 'soft',
-  },
-  {
-    label: '你会得到什么',
-    title: '先得到方向，再看到推演路径',
-    body: '优先呈现事业、关系、财富与阶段重点，再逐层展开判断来源，让“该怎么做”与“为什么这么做”同时成立。',
-    emphasis: 'strong',
-  },
-  {
-    label: '为什么值得信',
-    title: '倪海夏体系起盘，结构化解读呈现',
-    body: '遵循倪海夏体系的起盘规则，并以结构化方式呈现结论与依据，保持可追溯、可复核的阅读体验。',
-    emphasis: 'soft',
-  },
+// ─── 主星数据 ────────────────────────────────────────────
+const STARS = [
+  { name: '紫微', nature: '帝王' }, { name: '天机', nature: '智慧' },
+  { name: '太阳', nature: '阳刚' }, { name: '武曲', nature: '财富' },
+  { name: '天同', nature: '享福' }, { name: '廉贞', nature: '才艺' },
+  { name: '天府', nature: '财库' }, { name: '太阴', nature: '柔美' },
+  { name: '贪狼', nature: '桃花' }, { name: '巨门', nature: '口才' },
+  { name: '天相', nature: '辅佐' }, { name: '天梁', nature: '荫护' },
+  { name: '七杀', nature: '将帅' }, { name: '破军', nature: '开创' },
 ];
 
 // ─── 功能模块 ────────────────────────────────────────────
@@ -265,38 +255,58 @@ export default function HomePage() {
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => router.push('/chart')}
+            className="text-xs px-4 py-1.5 rounded-full transition-all duration-300"
+            style={{
+              border: `1px solid ${c.goldLine}`,
+              color: c.goldSolid,
+            }}
+          >
+            立即起盘
+          </motion.button>
         </div>
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-20">
         <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-20">
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          {/* 标签行 */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-[11px] tracking-[0.5em] uppercase mb-8 transition-colors duration-300"
-            style={{ color: c.tagText }}>
-            Zi Wei Decision Intelligence
-          </motion.p>
+            className="flex items-center justify-center gap-3 mb-8">
+            <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
+            <span className="text-[11px] tracking-[0.45em] transition-colors duration-300"
+              style={{ color: c.tagText }}>
+              紫微斗数 · 倪海夏体系
+            </span>
+            <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
+          </motion.div>
 
           {/* 主标题 */}
           <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className={`grad-text font-bold leading-tight mb-8 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+            className={`grad-text font-bold leading-none mb-5 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
             style={{
-              fontSize: 'clamp(38px, 6.4vw, 78px)',
-              letterSpacing: '0.04em',
+              fontSize: 'clamp(56px, 10vw, 124px)',
+              letterSpacing: '0.07em',
             }}>
-            先读懂你的命盘结构，
-            <br />
-            再做关键选择
+            紫微命盘
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 transition-colors duration-300"
+            className="text-lg md:text-xl tracking-[0.22em] mb-3 transition-colors duration-300"
             style={{ color: c.textSecond }}>
-            用倪海夏体系起盘，结合 AI 结构化解读，
-            把复杂命盘变成你今天就能执行的决策建议。
+            倪海夏正宗体系 · AI 深度解读
+          </motion.p>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.62 }}
+            className="text-sm max-w-xl mx-auto leading-relaxed mb-10 transition-colors duration-300"
+            style={{ color: c.textMuted }}>
+            输入出生年月日时，生成专属紫微斗数命盘，查看命格结构与流年重点。
           </motion.p>
 
           {/* CTA */}
@@ -309,46 +319,35 @@ export default function HomePage() {
               onClick={() => router.push('/chart')}
               className="px-12 py-4 font-semibold text-base tracking-widest rounded-full transition-all duration-300"
               style={{ background: c.ctaBg, color: c.ctaText }}>
-              立即生成我的命盘解读
+              立即起盘
             </motion.button>
-            <p className="text-xs tracking-wide transition-colors duration-300"
-              style={{ color: c.textMuted }}>
-              结论与依据同步呈现，判断路径清晰可追溯。
+            <p className="text-[10px] tracking-wider transition-colors duration-300"
+              style={{ color: c.textFaint }}>
+              完全免费 · 无需注册 · 基于倪海夏老师教学体系
             </p>
           </motion.div>
 
-          {/* 克制的命盘识别锚点 */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1, duration: 0.9 }}
-            className="mt-14 flex justify-center"
-          >
-            <div
-              className="relative w-[210px] h-[210px] rounded-full"
-              style={{
-                border: `1px solid ${c.goldLine}`,
-                background: theme === 'dark'
-                  ? 'radial-gradient(circle, rgba(212,168,67,0.08) 0%, rgba(212,168,67,0.02) 38%, transparent 72%)'
-                  : 'radial-gradient(circle, rgba(140,100,20,0.1) 0%, rgba(140,100,20,0.03) 42%, transparent 72%)',
-              }}
-            >
-              <div className="absolute inset-[18px] rounded-full" style={{ border: `1px dashed ${c.featureBord}` }} />
-              {Array.from({ length: 12 }).map((_, idx) => (
-                <span
-                  key={idx}
-                  className="absolute left-1/2 top-1/2 w-px h-3 -translate-x-1/2 origin-bottom"
-                  style={{
-                    transform: `translate(-50%, -100%) rotate(${idx * 30}deg)`,
-                    background: c.goldLine,
-                    opacity: 0.55,
-                  }}
-                />
-              ))}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="w-2 h-2 rounded-full" style={{ background: c.goldLine }} />
-              </div>
-            </div>
+          {/* 十四主星（保留识别感，降低密度） */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.05, duration: 0.8 }}
+            className="mt-14 flex flex-wrap justify-center gap-1.5 max-w-2xl mx-auto">
+            {STARS.map((star, i) => (
+              <motion.div key={star.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.05 + i * 0.03, duration: 0.35 }}
+                className="group flex items-center gap-1 px-2.5 py-1 rounded-full cursor-default transition-all duration-200"
+                style={{
+                  background: c.starBg,
+                  border: `1px solid ${c.starBorder}`,
+                  opacity: 0.88,
+                }}>
+                <span className="text-[10px] transition-colors duration-200"
+                  style={{ color: c.starText }}>{star.name}</span>
+                <span className="text-[9px] transition-colors duration-200"
+                  style={{ color: c.starNature }}>{star.nature}</span>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
 
@@ -365,40 +364,85 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ══ 首屏后前 3 屏：产品叙事 ═══════════════════════════ */}
-      <section className="relative z-10 px-6 md:px-12 lg:px-24 py-20 md:py-28">
-        <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
-          style={{ background: `linear-gradient(to bottom, transparent, ${c.bgBase})`, opacity: 0.35 }} />
-        <div className="max-w-5xl mx-auto space-y-8 md:space-y-10">
-          {FRONT_SECTIONS.map((item, i) => (
-            <FadeIn key={item.label} delay={i * 0.08}>
-              <div
-                className="rounded-3xl p-7 md:p-10"
-                style={{
-                  background: item.emphasis === 'strong' ? c.niBg : c.featureBg,
-                  border: `1px solid ${item.emphasis === 'strong' ? c.niBorder : c.featureBord}`,
-                  boxShadow: item.emphasis === 'strong'
-                    ? `0 8px 40px ${theme === 'dark' ? 'rgba(212,168,67,0.14)' : 'rgba(140,100,20,0.14)'}`
-                    : c.cardShadow,
-                  transform: item.emphasis === 'strong' ? 'scale(1.01)' : 'none',
-                  opacity: item.emphasis === 'strong' ? 1 : 0.9,
-                }}
-              >
-                <p className="text-[11px] tracking-[0.4em] uppercase mb-4" style={{ color: c.tagText }}>
-                  {item.label}
-                </p>
-                <h2
-                  className={`grad-text ${item.emphasis === 'strong' ? 'text-3xl md:text-[42px]' : 'text-2xl md:text-[34px]'} font-bold tracking-tight leading-tight mb-4 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
-                >
-                  {item.title}
-                </h2>
-                <p className={`${item.emphasis === 'strong' ? 'text-base md:text-lg' : 'text-sm md:text-base'} leading-relaxed max-w-3xl`} style={{ color: c.textSecond }}>
-                  {item.body}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
+      {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
+      <section className="relative z-10 overflow-hidden" style={{ padding: '104px 24px 96px' }}>
+        <div className="absolute inset-0 transition-all duration-500"
+          style={{
+            background: theme === 'dark'
+              ? `linear-gradient(to bottom, ${c.bgBase} 0%, #030a18 14%, #0d0820 32%, #0a0618 68%, #030a18 86%, ${c.bgBase} 100%)`
+              : `linear-gradient(to bottom, ${c.bgBase} 0%, #3a1204 12%, #1e0a02 28%, #180802 72%, #3a1204 88%, ${c.bgBase} 100%)`,
+          }} />
+
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="font-bold"
+            style={{
+              fontSize: 'clamp(220px, 38vw, 460px)',
+              color: 'rgba(212,168,67,0.03)',
+              lineHeight: 1,
+              fontFamily: 'var(--font-serif, serif)',
+              letterSpacing: '-0.05em',
+            }}>命</span>
         </div>
+
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[560px] h-[260px] pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%)' }} />
+
+        <FadeIn>
+          <div className="relative max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex items-center justify-center gap-4 mb-10">
+              <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, rgba(212,168,67,0.45))' }} />
+              <span className="text-[10px] tracking-[0.55em] uppercase" style={{ color: 'rgba(212,168,67,0.5)' }}>
+                命 · 运 · 观
+              </span>
+              <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, rgba(212,168,67,0.45))' }} />
+            </motion.div>
+
+            <div className="space-y-4">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="tracking-widest"
+                style={{
+                  fontSize: 'clamp(15px, 2vw, 24px)',
+                  color: 'rgba(215,228,252,0.72)',
+                  fontWeight: 400,
+                  letterSpacing: '0.13em',
+                }}>
+                提前窥见命运的意义，
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.25 }}
+                className="tracking-wider leading-relaxed"
+                style={{
+                  fontSize: 'clamp(19px, 2.5vw, 34px)',
+                  color: 'rgba(220,232,250,0.74)',
+                  fontWeight: 400,
+                  letterSpacing: '0.08em',
+                }}>
+                不在于预知未来，而在于不断认识自己、精进自己，
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+                className={`grad-text font-bold ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+                style={{
+                  fontSize: 'clamp(22px, 3.2vw, 44px)',
+                  letterSpacing: '0.05em',
+                  lineHeight: 1.35,
+                }}>
+                最终书写属于你的人生剧本。
+              </motion.p>
+            </div>
+          </div>
+        </FadeIn>
       </section>
 
       {/* ══ 功能详解 ══════════════════════════════════════ */}
