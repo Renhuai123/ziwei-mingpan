@@ -286,9 +286,9 @@ export default function HomePage() {
               fontSize: 'clamp(38px, 6.4vw, 78px)',
               letterSpacing: '0.04em',
             }}>
-            看见你的命盘结构，
+            先读懂你的命盘结构，
             <br />
-            再决定下一步
+            再做关键选择
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -313,7 +313,7 @@ export default function HomePage() {
             </motion.button>
             <p className="text-xs tracking-wide transition-colors duration-300"
               style={{ color: c.textMuted }}>
-              每一条结论，均附对应命盘依据与推演路径。
+              结论与依据同步呈现，判断路径清晰可追溯。
             </p>
           </motion.div>
 
@@ -346,7 +346,7 @@ export default function HomePage() {
                 />
               ))}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[10px] tracking-[0.35em]" style={{ color: c.tagText }}>命盘轮廓</span>
+                <span className="w-2 h-2 rounded-full" style={{ background: c.goldLine }} />
               </div>
             </div>
           </motion.div>
@@ -381,17 +381,18 @@ export default function HomePage() {
                     ? `0 8px 40px ${theme === 'dark' ? 'rgba(212,168,67,0.14)' : 'rgba(140,100,20,0.14)'}`
                     : c.cardShadow,
                   transform: item.emphasis === 'strong' ? 'scale(1.01)' : 'none',
+                  opacity: item.emphasis === 'strong' ? 1 : 0.9,
                 }}
               >
                 <p className="text-[11px] tracking-[0.4em] uppercase mb-4" style={{ color: c.tagText }}>
                   {item.label}
                 </p>
                 <h2
-                  className={`grad-text text-2xl md:text-4xl font-bold tracking-tight leading-tight mb-4 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+                  className={`grad-text ${item.emphasis === 'strong' ? 'text-3xl md:text-[42px]' : 'text-2xl md:text-[34px]'} font-bold tracking-tight leading-tight mb-4 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
                 >
                   {item.title}
                 </h2>
-                <p className="text-sm md:text-base leading-relaxed max-w-3xl" style={{ color: c.textSecond }}>
+                <p className={`${item.emphasis === 'strong' ? 'text-base md:text-lg' : 'text-sm md:text-base'} leading-relaxed max-w-3xl`} style={{ color: c.textSecond }}>
                   {item.body}
                 </p>
               </div>
