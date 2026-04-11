@@ -74,15 +74,22 @@ function ThemeToggle() {
   );
 }
 
-// ─── 主星数据 ────────────────────────────────────────────
-const STARS = [
-  { name: '紫微', nature: '帝王' }, { name: '天机', nature: '智慧' },
-  { name: '太阳', nature: '阳刚' }, { name: '武曲', nature: '财富' },
-  { name: '天同', nature: '享福' }, { name: '廉贞', nature: '才艺' },
-  { name: '天府', nature: '财库' }, { name: '太阴', nature: '柔美' },
-  { name: '贪狼', nature: '桃花' }, { name: '巨门', nature: '口才' },
-  { name: '天相', nature: '辅佐' }, { name: '天梁', nature: '荫护' },
-  { name: '七杀', nature: '将帅' }, { name: '破军', nature: '开创' },
+const FRONT_SECTIONS = [
+  {
+    label: '这是什么',
+    title: '不是“算命展示页”，而是一份可执行的人生决策地图',
+    body: '输入出生信息后，你会得到一份完整紫微命盘，并由 AI 把星曜、宫位与四化翻译成你能立刻理解的行动语言。',
+  },
+  {
+    label: '你会得到什么',
+    title: '先看到结论，再看到依据',
+    body: '先给出你最关心的事业、关系、财富与当下阶段重点，再展开“为什么是这个判断”，避免只看术语、不知道怎么用。',
+  },
+  {
+    label: '为什么值得信',
+    title: '倪海夏体系推盘 + 结构化 AI 解读',
+    body: '起盘遵循倪海夏教学体系，解读基于命盘结构逐层生成，不用“神秘话术”糊弄，而是让你知道每条结论从哪里来。',
+  },
 ];
 
 // ─── 功能模块 ────────────────────────────────────────────
@@ -255,103 +262,56 @@ export default function HomePage() {
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => router.push('/chart')}
-            className="text-xs px-4 py-1.5 rounded-full transition-all duration-300"
-            style={{
-              border: `1px solid ${c.goldLine}`,
-              color: c.goldSolid,
-            }}
-          >
-            立即起盘
-          </motion.button>
         </div>
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-20">
         <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-20">
-
-          {/* 标签行 */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex items-center justify-center gap-3 mb-10">
-            <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
-            <span className="text-[11px] tracking-[0.5em] uppercase transition-colors duration-300"
-              style={{ color: c.tagText }}>
-              Zi Wei Dou Shu · AI Divination
-            </span>
-            <div className="h-px w-12" style={{ background: `linear-gradient(to left, transparent, ${c.goldLine})` }} />
-          </motion.div>
+            className="text-[11px] tracking-[0.5em] uppercase mb-8 transition-colors duration-300"
+            style={{ color: c.tagText }}>
+            Zi Wei Decision Intelligence
+          </motion.p>
 
           {/* 主标题 */}
           <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className={`grad-text font-bold leading-none mb-6 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+            className={`grad-text font-bold leading-tight mb-8 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
             style={{
-              fontSize: 'clamp(64px, 12vw, 140px)',
-              letterSpacing: '0.08em',
+              fontSize: 'clamp(38px, 6.4vw, 78px)',
+              letterSpacing: '0.04em',
             }}>
-            紫微命盘
+            15 分钟，看清你未来 3–5 年
+            <br />
+            最该做的选择
           </motion.h1>
 
-          {/* 副标题 */}
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="text-lg md:text-xl tracking-widest mb-4 transition-colors duration-300"
+            className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-12 transition-colors duration-300"
             style={{ color: c.textSecond }}>
-            倪海夏正宗体系 · AI 深度解读
-          </motion.p>
-
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.65 }}
-            className="text-sm max-w-lg mx-auto leading-relaxed mb-12 transition-colors duration-300"
-            style={{ color: c.textMuted }}>
-            输入出生年月日时，生成专属紫微斗数命盘<br />
-            依据倪海夏老师完整教学体系，AI 解读你的命格与运势
+            用倪海夏体系起盘，结合 AI 结构化解读，
+            把复杂命盘变成你今天就能执行的决策建议。
           </motion.p>
 
           {/* CTA */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.85 }}
-            className="flex flex-col items-center gap-3">
+            className="flex flex-col items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.03, boxShadow: `0 0 40px ${c.glowTint}` }}
               whileTap={{ scale: 0.97 }}
               onClick={() => router.push('/chart')}
               className="px-12 py-4 font-semibold text-base tracking-widest rounded-full transition-all duration-300"
               style={{ background: c.ctaBg, color: c.ctaText }}>
-              立即起盘
+              立即生成我的命盘解读
             </motion.button>
-            <p className="text-[10px] tracking-wider transition-colors duration-300"
-              style={{ color: c.textFaint }}>
-              完全免费 · 无需注册 · 基于倪海夏老师教学体系
+            <p className="text-xs tracking-wide transition-colors duration-300"
+              style={{ color: c.textMuted }}>
+              信任承诺：完整显示推演依据，不给“只报结果”的黑箱结论。
             </p>
-          </motion.div>
-
-          {/* 十四主星 */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-20 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
-            {STARS.map((star, i) => (
-              <motion.div key={star.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.1 + i * 0.04, duration: 0.4 }}
-                className="group flex items-center gap-1 px-2.5 py-1 rounded-full cursor-default transition-all duration-200"
-                style={{
-                  background: c.starBg,
-                  border: `1px solid ${c.starBorder}`,
-                  boxShadow: theme === 'light' ? '0 1px 4px rgba(140,100,20,0.08)' : 'none',
-                }}>
-                <span className="text-[11px] transition-colors duration-200"
-                  style={{ color: c.starText }}>{star.name}</span>
-                <span className="text-[9px] transition-colors duration-200"
-                  style={{ color: c.starNature }}>{star.nature}</span>
-              </motion.div>
-            ))}
           </motion.div>
         </motion.div>
 
@@ -368,107 +328,34 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ══ 哲学引言 ══════════════════════════════════════ */}
-      <section className="relative z-10 overflow-hidden" style={{ padding: '120px 24px' }}>
-        {/* 深色背景：顶底融入页面底色，中心为深色调 */}
-        <div className="absolute inset-0 transition-all duration-500"
-          style={{
-            background: theme === 'dark'
-              ? `linear-gradient(to bottom, ${c.bgBase} 0%, #030a18 14%, #0d0820 32%, #0a0618 68%, #030a18 86%, ${c.bgBase} 100%)`
-              : `linear-gradient(to bottom, ${c.bgBase} 0%, #3a1204 12%, #1e0a02 28%, #180802 72%, #3a1204 88%, ${c.bgBase} 100%)`,
-          }} />
-
-        {/* 大字水印 "命" */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-          <span className="font-bold"
-            style={{
-              fontSize: 'clamp(280px, 45vw, 560px)',
-              color: 'rgba(212,168,67,0.028)',
-              lineHeight: 1,
-              fontFamily: 'var(--font-serif, serif)',
-              letterSpacing: '-0.05em',
-            }}>命</span>
+      {/* ══ 首屏后前 3 屏：产品叙事 ═══════════════════════════ */}
+      <section className="relative z-10 px-6 md:px-12 lg:px-24 py-20 md:py-28">
+        <div className="max-w-5xl mx-auto space-y-8 md:space-y-10">
+          {FRONT_SECTIONS.map((item, i) => (
+            <FadeIn key={item.label} delay={i * 0.08}>
+              <div
+                className="rounded-3xl p-7 md:p-10"
+                style={{
+                  background: i % 2 === 0 ? c.featureBg : c.niBg,
+                  border: `1px solid ${i % 2 === 0 ? c.featureBord : c.niBorder}`,
+                  boxShadow: c.cardShadow,
+                }}
+              >
+                <p className="text-[11px] tracking-[0.4em] uppercase mb-4" style={{ color: c.tagText }}>
+                  {item.label}
+                </p>
+                <h2
+                  className={`grad-text text-2xl md:text-4xl font-bold tracking-tight leading-tight mb-4 ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+                >
+                  {item.title}
+                </h2>
+                <p className="text-sm md:text-base leading-relaxed max-w-3xl" style={{ color: c.textSecond }}>
+                  {item.body}
+                </p>
+              </div>
+            </FadeIn>
+          ))}
         </div>
-
-
-        {/* 顶部光晕 */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%)' }} />
-
-        <FadeIn>
-          <div className="relative max-w-4xl mx-auto text-center">
-
-            {/* 标签 */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex items-center justify-center gap-4 mb-14">
-              <div className="h-px w-20" style={{ background: 'linear-gradient(to right, transparent, rgba(212,168,67,0.45))' }} />
-              <span className="text-[10px] tracking-[0.6em] uppercase" style={{ color: 'rgba(212,168,67,0.5)' }}>
-                命 · 运 · 观
-              </span>
-              <div className="h-px w-20" style={{ background: 'linear-gradient(to left, transparent, rgba(212,168,67,0.45))' }} />
-            </motion.div>
-
-            {/* 三行递进式文字——由淡到亮，层层递进 */}
-            <div className="space-y-5">
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-                className="tracking-widest"
-                style={{
-                  fontSize: 'clamp(16px, 2.2vw, 28px)',
-                  color: 'rgba(215,228,252,0.72)',
-                  fontWeight: 400,
-                  letterSpacing: '0.15em',
-                }}>
-                提前窥见命运的意义，
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.25 }}
-                className="tracking-wider leading-loose"
-                style={{
-                  fontSize: 'clamp(20px, 2.8vw, 38px)',
-                  color: 'rgba(220,232,250,0.75)',
-                  fontWeight: 400,
-                  letterSpacing: '0.1em',
-                }}>
-                不在于预知未来，<br />
-                而在于不断认识自己、精进自己，
-              </motion.p>
-
-              {/* 最后一行：最亮、最大、金色渐变 */}
-              <motion.p
-                initial={{ opacity: 0, y: 20, scale: 0.97 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-                className="grad-text grad-text-dark font-bold"
-                style={{
-                  fontSize: 'clamp(24px, 3.8vw, 52px)',
-                  letterSpacing: '0.06em',
-                  lineHeight: 1.3,
-                }}>
-                最终书写只属于你的<br className="md:hidden" />人生剧本。
-              </motion.p>
-            </div>
-
-            {/* 底部金线 */}
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              whileInView={{ opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.65 }}
-              className="mt-14 flex items-center justify-center gap-4">
-              <div className="h-px w-28" style={{ background: 'linear-gradient(to right, transparent, rgba(212,168,67,0.5))' }} />
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(212,168,67,0.5)' }} />
-              <div className="h-px w-28" style={{ background: 'linear-gradient(to left, transparent, rgba(212,168,67,0.5))' }} />
-            </motion.div>
-          </div>
-        </FadeIn>
       </section>
 
       {/* ══ 功能详解 ══════════════════════════════════════ */}
