@@ -267,8 +267,8 @@ export default function HomePage() {
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-20">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-20">
+      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-16">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-14">
           {/* 标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -296,7 +296,7 @@ export default function HomePage() {
             transition={{ duration: 0.7, delay: 0.45 }}
             className="text-lg md:text-xl tracking-[0.22em] mb-3 transition-colors duration-300"
             style={{ color: c.textSecond }}>
-            倪海夏正宗体系 · AI 深度解读
+            倪海夏正宗体系 · AI深度解读
           </motion.p>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.62 }}
@@ -318,7 +318,7 @@ export default function HomePage() {
               立即起盘
             </motion.button>
             <p className="text-[10px] tracking-wider transition-colors duration-300"
-              style={{ color: c.textFaint }}>
+              style={{ color: c.textMuted }}>
               完全免费 · 无需注册 · 基于倪海夏老师教学体系
             </p>
           </motion.div>
@@ -326,13 +326,13 @@ export default function HomePage() {
           {/* 十四主星（保留识别感，降低密度） */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 1.05, duration: 0.8 }}
-            className="mt-14 flex flex-wrap justify-center gap-1.5 max-w-2xl mx-auto">
+            className="mt-12 grid grid-cols-7 gap-1.5 max-w-[540px] mx-auto">
             {STARS.map((star, i) => (
               <motion.div key={star.name}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.05 + i * 0.03, duration: 0.35 }}
-                className="group flex items-center gap-1 px-2.5 py-1 rounded-full cursor-default transition-all duration-200"
+                className="group flex items-center justify-center px-2 py-1 rounded-full cursor-default transition-all duration-200"
                 style={{
                   background: c.starBg,
                   border: `1px solid ${c.starBorder}`,
@@ -359,7 +359,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
-      <section className="relative z-10 overflow-hidden" style={{ padding: '88px 24px 84px' }}>
+      <section className="relative z-10 overflow-hidden" style={{ padding: '80px 24px 76px' }}>
         <div className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'dark'
@@ -371,7 +371,7 @@ export default function HomePage() {
           <span className="font-bold"
             style={{
               fontSize: 'clamp(220px, 38vw, 460px)',
-              color: 'rgba(212,168,67,0.018)',
+              color: 'rgba(212,168,67,0.012)',
               lineHeight: 1,
               fontFamily: 'var(--font-serif, serif)',
               letterSpacing: '-0.05em',
@@ -415,7 +415,7 @@ export default function HomePage() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="tracking-wider"
                 style={{
-                  fontSize: 'clamp(22px, 2.8vw, 36px)',
+                  fontSize: 'clamp(21px, 2.6vw, 32px)',
                   color: 'rgba(220,232,250,0.74)',
                   fontWeight: 400,
                   letterSpacing: '0.08em',
@@ -428,7 +428,7 @@ export default function HomePage() {
                 transition={{ duration: 0.72, delay: 0.34 }}
                 className="tracking-wider"
                 style={{
-                  fontSize: 'clamp(20px, 2.6vw, 33px)',
+                  fontSize: 'clamp(24px, 3vw, 40px)',
                   color: 'rgba(218,230,248,0.8)',
                   fontWeight: 400,
                   letterSpacing: '0.08em',
@@ -458,7 +458,10 @@ export default function HomePage() {
           <div key={i} className={`${i < 2 ? 'min-h-0' : 'min-h-screen'} flex items-center px-6 md:px-12 lg:px-24 ${i < 2 ? 'py-16 md:py-20' : 'py-24'}`}
             style={{ background: i % 2 === 1 ? c.altSection : 'transparent' }}>
             <div className="max-w-6xl mx-auto w-full">
-              <div className={`grid grid-cols-1 lg:grid-cols-2 ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
+              <div
+                className={`grid grid-cols-1 lg:grid-cols-2 ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}
+                style={i < 2 ? { gridTemplateColumns: i === 0 ? '0.9fr 1.1fr' : '1.1fr 0.9fr' } : undefined}
+              >
 
                 {/* 文字区 */}
                 <div className={i % 2 === 1 ? 'lg:col-start-2' : ''}>
@@ -535,7 +538,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 天·地·人 三分理论 ════════════════════════════ */}
-      <section className="relative z-10 py-32 px-6 md:px-12 lg:px-24"
+      <section className="relative z-10 py-28 px-6 md:px-12 lg:px-24"
         style={{ background: c.altSection }}>
         <div className="max-w-5xl mx-auto">
           <FadeIn>
@@ -549,15 +552,15 @@ export default function HomePage() {
               <h2 className={`grad-text text-4xl md:text-5xl font-bold mb-5 tracking-tight ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}>
                 天 · 地 · 人
               </h2>
-              <p className="max-w-xl mx-auto text-sm leading-relaxed transition-colors duration-300"
+              <p className="max-w-2xl mx-auto text-sm leading-relaxed transition-colors duration-300"
                 style={{ color: c.textSecond }}>
-                倪海夏老师的核心命运观：命运从来不是人生的全部。
+                倪海夏老师的核心命运观：命运从来不是人生的全部。<br />
                 他将影响人生的力量分为三个同等重要的维度。
               </p>
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
                 glyph: '天',
@@ -583,9 +586,9 @@ export default function HomePage() {
                 glyph: '人',
                 label: '人心意念',
                 pct: '⅓',
-                color: theme === 'dark' ? '#4ade80' : '#16a34a',
-                borderColor: theme === 'dark' ? 'rgba(74,222,128,0.3)' : 'rgba(22,163,74,0.3)',
-                bgColor: theme === 'dark' ? 'rgba(74,222,128,0.04)' : 'rgba(255,255,255,0.9)',
+                color: theme === 'dark' ? '#64d88b' : '#1a8f4a',
+                borderColor: theme === 'dark' ? 'rgba(100,216,139,0.26)' : 'rgba(26,143,74,0.24)',
+                bgColor: theme === 'dark' ? 'rgba(100,216,139,0.035)' : 'rgba(255,255,255,0.9)',
                 desc: '个人的意志、心态、选择与行动，才是改变命运最主动的力量。倪师强调：了解命盘是为了更好地做人，而不是坐等命运安排。精进自己，是最强的破局之道。',
                 sub: '意志 · 选择 · 行动',
               },
@@ -663,8 +666,8 @@ export default function HomePage() {
               </h2>
               <p className="max-w-xl mx-auto leading-relaxed text-sm transition-colors duration-300"
                 style={{ color: c.textSecond }}>
-                当代最重要的紫微斗数传承者之一，以系统化、实用化的教学方式，
-                将数百年的命理智慧带入现代。
+                当代最重要的紫微斗数传承者之一<br />
+                以系统化、实用化的教学方式，将数百年的命理智慧带入现代。
               </p>
             </div>
           </FadeIn>
@@ -679,18 +682,22 @@ export default function HomePage() {
               }}>
 
               {/* 三栏数据 */}
-              <div className="grid grid-cols-3 gap-8 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
                 {[
                   { label: '生于', value: '1953年', sub: '台湾新竹' },
                   { label: '离世', value: '2012年', sub: '享年59岁' },
                   { label: '传承', value: '紫微斗数', sub: '奇门遁甲 · 六壬' },
                 ].map(item => (
-                  <div key={item.label} className="text-center">
-                    <div className="text-[10px] tracking-widest mb-1 transition-colors duration-300"
+                  <div key={item.label} className="text-center rounded-xl px-4 py-3"
+                    style={{
+                      border: `1px solid ${c.niDivider}`,
+                      background: theme === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.55)',
+                    }}>
+                    <div className="text-[10px] tracking-[0.3em] mb-1 transition-colors duration-300"
                       style={{ color: c.textFaint }}>{item.label}</div>
-                    <div className="text-xl font-bold mb-0.5 transition-colors duration-300"
+                    <div className="text-2xl font-semibold mb-0.5 transition-colors duration-300"
                       style={{ color: c.goldSolid }}>{item.value}</div>
-                    <div className="text-xs transition-colors duration-300"
+                    <div className="text-[11px] transition-colors duration-300"
                       style={{ color: c.textMuted }}>{item.sub}</div>
                   </div>
                 ))}
@@ -700,23 +707,15 @@ export default function HomePage() {
                 style={{ background: c.niDivider }} />
 
               {/* 传记文字 */}
-              <div className="space-y-4 text-sm leading-relaxed max-w-3xl mx-auto text-left transition-colors duration-300"
+              <div className="space-y-3 text-sm leading-relaxed max-w-3xl mx-auto text-left transition-colors duration-300"
                 style={{ color: c.textSecond }}>
                 <p>
-                  倪海夏老师自幼接触命理，精研紫微斗数、奇门遁甲、六壬等传统术数数十年。
-                  他最大的贡献在于将极为复杂的紫微斗数系统化、条理化——他设计了一套严谨的学习路径，
-                  从「十四主星」到「四化飞星」再到「大限流年」，层层递进，
-                  有别于市面上碎片化的「口诀记忆法」。
+                  倪海夏老师长期精研紫微斗数、奇门遁甲、六壬等传统术数，
+                  以系统化路径重建了现代人可学习、可实践的解盘框架。
                 </p>
                 <p>
-                  倪师的课堂以「理解」而非「背诵」为核心。他反复强调：
-                  每颗星都有其五行属性与根本性格，理解了这颗星的本质，
-                  才能在任何宫位中推导出正确的判断，而不是死记硬背「此星在此宫代表什么」。
-                  这种教学方式培养了无数真正能独立解盘的命理师。
-                </p>
-                <p>
-                  他留下的数百小时教学录音与课堂笔记，至今仍是学习正宗紫微斗数最权威的资料，
-                  被全球华人命理界奉为当代传承的重要典籍。
+                  其教学核心是「理解」而非「背诵」：从星曜本质、宫位关系到四化推演，
+                  强调逻辑一致与判断可复核，这也是其传承影响深远的关键。
                 </p>
               </div>
             </div>
@@ -843,8 +842,8 @@ const STAR_BRIEF: Record<string, { attr: string; brief: string }> = {
 function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType<typeof useColors> }) {
   if (index === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
-        <div className="grid grid-cols-4 gap-1 w-52">
+      <div className="flex flex-col items-center justify-center h-full gap-5">
+        <div className="grid grid-cols-4 gap-1.5 w-72 mx-auto">
           {Array.from({ length: 16 }).map((_, i) => {
             const isCenter = [5, 6, 9, 10].includes(i);
             const isActive = [0, 3, 12, 15].includes(i);
@@ -852,7 +851,7 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
               <motion.div key={i}
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                 transition={{ delay: i * 0.03 }}
-                className="h-11 rounded-sm flex items-center justify-center text-[10px] transition-all duration-300"
+                className="h-14 rounded-sm flex items-center justify-center text-xs transition-all duration-300"
                 style={{
                   border: `1px solid ${isActive ? c.goldLine : c.cardBorder}`,
                   background: isCenter ? 'transparent' : isActive ? c.starBg : c.featureBg,
@@ -874,15 +873,15 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
     const [sel, setSel] = useState<string | null>(null);
     const selInfo = sel ? (STAR_BRIEF[sel] ?? SIHUA_BRIEF[sel] ?? null) : null;
     return (
-      <div className="flex flex-col gap-3 h-full justify-center">
+      <div className="flex flex-col gap-4 h-full justify-center">
         {[
           { group: '紫微系', stars: ['紫微', '天机', '太阳', '武曲', '天同', '廉贞'] },
           { group: '天府系', stars: ['天府', '太阴', '贪狼', '巨门', '天相', '天梁', '七杀', '破军'] },
         ].map(group => (
           <div key={group.group}>
-            <div className="text-[9px] tracking-widest mb-1.5 transition-colors duration-300"
+            <div className="text-[11px] tracking-widest mb-2 transition-colors duration-300"
               style={{ color: c.textFaint }}>{group.group}</div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1.5">
               {group.stars.map(s => (
                 <motion.button
                   key={s}
@@ -890,7 +889,7 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.1 }}
-                  className="text-[10px] px-1.5 py-0.5 rounded cursor-pointer"
+                  className="text-xs px-2 py-1 rounded-md cursor-pointer"
                   style={{
                     border: `1px solid ${sel === s ? c.goldSolid : c.goldLine}`,
                     color: sel === s ? c.goldSolid : c.goldSolid,
@@ -904,9 +903,9 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
           </div>
         ))}
         <div>
-          <div className="text-[9px] tracking-widest mb-1.5 transition-colors duration-300"
+          <div className="text-[11px] tracking-widest mb-2 transition-colors duration-300"
             style={{ color: c.textFaint }}>四化飞星</div>
-          <div className="flex gap-1.5 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             {[['化禄', 'rgba(52,211,153,0.7)'], ['化权', 'rgba(96,165,250,0.7)'], ['化科', 'rgba(250,204,21,0.7)'], ['化忌', 'rgba(248,113,113,0.7)']].map(([label, color]) => (
               <motion.button
                 key={label}
@@ -914,7 +913,7 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.1 }}
-                className="text-[10px] px-2 py-0.5 rounded cursor-pointer"
+                className="text-xs px-2.5 py-1 rounded-md cursor-pointer"
                 style={{
                   border: `1px solid ${color}`,
                   color,
@@ -935,17 +934,18 @@ function FeatureVisual({ index, colors: c }: { index: number; colors: ReturnType
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="rounded-xl p-3 mt-1"
+              className="rounded-xl p-4 mt-1.5"
               style={{
                 border: `1px solid ${c.goldLine}`,
                 background: c.featureBg,
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
               }}
             >
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[12px] font-semibold" style={{ color: c.goldSolid }}>{sel}</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ color: c.tagText, border: `1px solid ${c.goldLine}` }}>{selInfo.attr}</span>
+                <span className="text-sm font-semibold" style={{ color: c.goldSolid }}>{sel}</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-full" style={{ color: c.tagText, border: `1px solid ${c.goldLine}` }}>{selInfo.attr}</span>
               </div>
-              <p className="text-[10px] leading-relaxed" style={{ color: c.textSecond }}>{selInfo.brief}</p>
+              <p className="text-xs leading-relaxed" style={{ color: c.textSecond }}>{selInfo.brief}</p>
             </motion.div>
           )}
         </AnimatePresence>
