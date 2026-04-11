@@ -237,6 +237,11 @@ export default function HomePage() {
     prose: '840px',
     splitY: '120px',
     cardY: '96px',
+    stageMobile: '82svh',
+    stageDesktop: '92vh',
+    titleGap: '24px',
+    descGap: '16px',
+    bodyGap: '28px',
   } as const;
 
   return (
@@ -284,7 +289,7 @@ export default function HomePage() {
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 z-10 pb-16 pt-10">
+      <section ref={heroRef} className="relative min-h-[82svh] lg:min-h-[92vh] flex flex-col items-center justify-center px-6 z-10 pb-16 pt-10">
         <motion.div style={{ y: heroY, opacity: heroOpacity, maxWidth: sectionSystem.heroText }} className="text-center w-full mx-auto mt-10">
           {/* 标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -376,7 +381,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
-      <section className="relative z-10 overflow-hidden min-h-[74vh]" style={{ padding: '72px 24px 72px' }}>
+      <section className="relative z-10 overflow-hidden min-h-[82svh] lg:min-h-[92vh]" style={{ padding: '72px 24px 72px' }}>
         <WeakBoundary line={c.navBorder} />
         <div className="absolute inset-0 transition-all duration-500"
           style={{
@@ -474,7 +479,7 @@ export default function HomePage() {
       <section className="relative z-10 py-0">
         <WeakBoundary line={c.navBorder} />
         {FEATURES.map((feature, i) => (
-          <div key={i} className={`min-h-0 flex items-center px-6 md:px-10 lg:px-14 py-20 md:py-24`}
+          <div key={i} className={`${i <= 2 ? 'min-h-[82svh] lg:min-h-[92vh]' : 'min-h-0'} flex items-center px-6 md:px-10 lg:px-14 py-20 md:py-24`}
             style={{ paddingTop: sectionSystem.splitY, paddingBottom: sectionSystem.splitY, background: i % 2 === 1 ? c.altSection : 'transparent' }}>
             <div className="mx-auto w-full" style={{ maxWidth: sectionSystem.container }}>
               <div
@@ -542,7 +547,7 @@ export default function HomePage() {
                       style={{
                         border: `1px solid ${c.featureBord}`,
                         background: c.featureBg,
-                        minHeight: i < 2 ? '420px' : '320px',
+                        minHeight: i === 0 || i === 1 ? '540px' : i === 2 ? '460px' : '320px',
                         boxShadow: c.cardShadow,
                       }}>
                       <FeatureVisual index={i} colors={c} />
@@ -556,12 +561,12 @@ export default function HomePage() {
       </section>
 
       {/* ══ 天·地·人 三分理论 ════════════════════════════ */}
-      <section className="relative z-10 px-6 md:px-10 lg:px-14"
+      <section className="relative z-10 min-h-[82svh] lg:min-h-[92vh] flex items-center px-6 md:px-10 lg:px-14"
         style={{ background: c.altSection, paddingTop: sectionSystem.cardY, paddingBottom: sectionSystem.cardY }}>
         <WeakBoundary line={c.navBorder} />
-        <div className="mx-auto" style={{ maxWidth: sectionSystem.container }}>
+        <div className="mx-auto w-full" style={{ maxWidth: sectionSystem.container }}>
           <FadeIn>
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
                 <span className="text-[10px] tracking-[0.5em] uppercase transition-colors duration-300"
@@ -579,7 +584,7 @@ export default function HomePage() {
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
               {
                 glyph: '天',
@@ -668,14 +673,14 @@ export default function HomePage() {
       </section>
 
       {/* ══ 倪海夏详细介绍 ════════════════════════════════ */}
-      <section className="relative z-10 px-6 md:px-10 lg:px-14"
+      <section className="relative z-10 min-h-[82svh] lg:min-h-[92vh] flex items-center px-6 md:px-10 lg:px-14"
         style={{ paddingTop: sectionSystem.cardY, paddingBottom: sectionSystem.cardY }}>
         <WeakBoundary line={c.navBorder} />
-        <div className="mx-auto" style={{ maxWidth: sectionSystem.container }}>
+        <div className="mx-auto w-full" style={{ maxWidth: sectionSystem.container }}>
 
           {/* 标题 */}
           <FadeIn>
-            <div className="text-center mb-14">
+            <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
                 <span className="text-[10px] tracking-[0.5em] uppercase transition-colors duration-300"
@@ -695,7 +700,7 @@ export default function HomePage() {
 
           {/* 生平卡片 */}
           <FadeIn delay={0.1}>
-            <div className="rounded-2xl p-8 md:p-12 mb-10 transition-all duration-300"
+            <div className="rounded-2xl p-8 md:p-10 mb-8 transition-all duration-300"
               style={{
                 border: `1px solid ${c.niBorder}`,
                 background: c.niBg,
