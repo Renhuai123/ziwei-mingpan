@@ -25,6 +25,16 @@ function FadeIn({
   );
 }
 
+function WeakBoundary({ line }: { line: string }) {
+  return (
+    <>
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: line }} />
+      <div className="absolute top-0 left-0 right-0 h-12 pointer-events-none"
+        style={{ background: `linear-gradient(to bottom, ${line}, transparent)` }} />
+    </>
+  );
+}
+
 // ─── 主题切换按钮 ────────────────────────────────────────
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -221,6 +231,13 @@ export default function HomePage() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '28%']);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const sectionSystem = {
+    container: '1280px',
+    heroText: '960px',
+    prose: '840px',
+    splitY: '120px',
+    cardY: '96px',
+  } as const;
 
   return (
     <div style={{ background: c.bgBase, transition: 'background 0.35s ease' }} className="overflow-x-hidden">
@@ -268,7 +285,7 @@ export default function HomePage() {
 
       {/* ══ HERO ══════════════════════════════════════════ */}
       <section ref={heroRef} className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 z-10 pb-16 pt-10">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-[1280px] w-full mx-auto mt-10">
+        <motion.div style={{ y: heroY, opacity: heroOpacity, maxWidth: sectionSystem.heroText }} className="text-center w-full mx-auto mt-10">
           {/* 标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -360,7 +377,7 @@ export default function HomePage() {
 
       {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
       <section className="relative z-10 overflow-hidden min-h-[74vh]" style={{ padding: '72px 24px 72px' }}>
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
+        <WeakBoundary line={c.navBorder} />
         <div className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'dark'
@@ -383,7 +400,7 @@ export default function HomePage() {
           style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%)' }} />
 
         <FadeIn>
-          <div className="relative max-w-[1280px] mx-auto text-center">
+          <div className="relative mx-auto text-center" style={{ maxWidth: sectionSystem.prose }}>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -455,11 +472,11 @@ export default function HomePage() {
 
       {/* ══ 功能详解 ══════════════════════════════════════ */}
       <section className="relative z-10 py-0">
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
+        <WeakBoundary line={c.navBorder} />
         {FEATURES.map((feature, i) => (
-          <div key={i} className={`min-h-0 flex items-center px-6 md:px-10 lg:px-14 py-20 md:py-24 lg:py-[120px]`}
-            style={{ background: i % 2 === 1 ? c.altSection : 'transparent' }}>
-            <div className="max-w-[1280px] mx-auto w-full">
+          <div key={i} className={`min-h-0 flex items-center px-6 md:px-10 lg:px-14 py-20 md:py-24`}
+            style={{ paddingTop: sectionSystem.splitY, paddingBottom: sectionSystem.splitY, background: i % 2 === 1 ? c.altSection : 'transparent' }}>
+            <div className="mx-auto w-full" style={{ maxWidth: sectionSystem.container }}>
               <div
                 className={`grid grid-cols-1 ${i % 2 === 0 ? 'lg:grid-cols-[0.45fr_0.55fr]' : 'lg:grid-cols-[0.55fr_0.45fr]'} ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}
               >
@@ -539,10 +556,10 @@ export default function HomePage() {
       </section>
 
       {/* ══ 天·地·人 三分理论 ════════════════════════════ */}
-      <section className="relative z-10 py-24 px-6 md:px-10 lg:px-14"
-        style={{ background: c.altSection }}>
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
-        <div className="max-w-[1280px] mx-auto">
+      <section className="relative z-10 px-6 md:px-10 lg:px-14"
+        style={{ background: c.altSection, paddingTop: sectionSystem.cardY, paddingBottom: sectionSystem.cardY }}>
+        <WeakBoundary line={c.navBorder} />
+        <div className="mx-auto" style={{ maxWidth: sectionSystem.container }}>
           <FadeIn>
             <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-3 mb-6">
@@ -651,9 +668,10 @@ export default function HomePage() {
       </section>
 
       {/* ══ 倪海夏详细介绍 ════════════════════════════════ */}
-      <section className="relative z-10 py-24 px-6 md:px-10 lg:px-14">
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
-        <div className="max-w-[1280px] mx-auto">
+      <section className="relative z-10 px-6 md:px-10 lg:px-14"
+        style={{ paddingTop: sectionSystem.cardY, paddingBottom: sectionSystem.cardY }}>
+        <WeakBoundary line={c.navBorder} />
+        <div className="mx-auto" style={{ maxWidth: sectionSystem.container }}>
 
           {/* 标题 */}
           <FadeIn>
