@@ -267,8 +267,8 @@ export default function HomePage() {
       </nav>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center px-6 z-10 pb-16">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto mt-14">
+      <section ref={heroRef} className="relative min-h-[92vh] flex flex-col items-center justify-center px-6 z-10 pb-16 pt-10">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-[1280px] w-full mx-auto mt-10">
           {/* 标签行 */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -359,7 +359,8 @@ export default function HomePage() {
       </section>
 
       {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
-      <section className="relative z-10 overflow-hidden" style={{ padding: '80px 24px 76px' }}>
+      <section className="relative z-10 overflow-hidden min-h-[74vh]" style={{ padding: '72px 24px 72px' }}>
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
         <div className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'dark'
@@ -382,7 +383,7 @@ export default function HomePage() {
           style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%)' }} />
 
         <FadeIn>
-          <div className="relative max-w-4xl mx-auto text-center">
+          <div className="relative max-w-[1280px] mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -453,14 +454,14 @@ export default function HomePage() {
       </section>
 
       {/* ══ 功能详解 ══════════════════════════════════════ */}
-      <section className="relative z-10 py-8">
+      <section className="relative z-10 py-0">
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
         {FEATURES.map((feature, i) => (
-          <div key={i} className={`${i < 2 ? 'min-h-0' : 'min-h-screen'} flex items-center px-6 md:px-12 lg:px-24 ${i < 2 ? 'py-16 md:py-20' : 'py-24'}`}
+          <div key={i} className={`min-h-0 flex items-center px-6 md:px-10 lg:px-14 py-20 md:py-24 lg:py-[120px]`}
             style={{ background: i % 2 === 1 ? c.altSection : 'transparent' }}>
-            <div className="max-w-6xl mx-auto w-full">
+            <div className="max-w-[1280px] mx-auto w-full">
               <div
-                className={`grid grid-cols-1 lg:grid-cols-2 ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}
-                style={i < 2 ? { gridTemplateColumns: i === 0 ? '0.9fr 1.1fr' : '1.1fr 0.9fr' } : undefined}
+                className={`grid grid-cols-1 ${i % 2 === 0 ? 'lg:grid-cols-[0.45fr_0.55fr]' : 'lg:grid-cols-[0.55fr_0.45fr]'} ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}
               >
 
                 {/* 文字区 */}
@@ -538,11 +539,12 @@ export default function HomePage() {
       </section>
 
       {/* ══ 天·地·人 三分理论 ════════════════════════════ */}
-      <section className="relative z-10 py-28 px-6 md:px-12 lg:px-24"
+      <section className="relative z-10 py-24 px-6 md:px-10 lg:px-14"
         style={{ background: c.altSection }}>
-        <div className="max-w-5xl mx-auto">
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
+        <div className="max-w-[1280px] mx-auto">
           <FadeIn>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
                 <span className="text-[10px] tracking-[0.5em] uppercase transition-colors duration-300"
@@ -560,7 +562,7 @@ export default function HomePage() {
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
                 glyph: '天',
@@ -649,12 +651,13 @@ export default function HomePage() {
       </section>
 
       {/* ══ 倪海夏详细介绍 ════════════════════════════════ */}
-      <section className="relative z-10 py-32 px-6 md:px-12 lg:px-24">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative z-10 py-24 px-6 md:px-10 lg:px-14">
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: c.navBorder }} />
+        <div className="max-w-[1280px] mx-auto">
 
           {/* 标题 */}
           <FadeIn>
-            <div className="text-center mb-20">
+            <div className="text-center mb-14">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <div className="h-px w-12" style={{ background: `linear-gradient(to right, transparent, ${c.goldLine})` }} />
                 <span className="text-[10px] tracking-[0.5em] uppercase transition-colors duration-300"
@@ -674,7 +677,7 @@ export default function HomePage() {
 
           {/* 生平卡片 */}
           <FadeIn delay={0.1}>
-            <div className="rounded-2xl p-8 md:p-12 mb-12 transition-all duration-300"
+            <div className="rounded-2xl p-8 md:p-12 mb-10 transition-all duration-300"
               style={{
                 border: `1px solid ${c.niBorder}`,
                 background: c.niBg,
