@@ -77,18 +77,21 @@ function ThemeToggle() {
 const FRONT_SECTIONS = [
   {
     label: '这是什么',
-    title: '不是“算命展示页”，而是一份可执行的人生决策地图',
-    body: '输入出生信息后，你会得到一份完整紫微命盘，并由 AI 把星曜、宫位与四化翻译成你能立刻理解的行动语言。',
+    title: '一份可阅读、可行动的紫微命盘',
+    body: '输入出生信息后，系统生成完整命盘，并将星曜、宫位、四化关系整理为可直接理解的决策线索。',
+    emphasis: 'soft',
   },
   {
     label: '你会得到什么',
-    title: '先看到结论，再看到依据',
-    body: '先给出你最关心的事业、关系、财富与当下阶段重点，再展开“为什么是这个判断”，避免只看术语、不知道怎么用。',
+    title: '先得到方向，再看到推演路径',
+    body: '优先呈现事业、关系、财富与阶段重点，再逐层展开判断来源，让“该怎么做”与“为什么这么做”同时成立。',
+    emphasis: 'strong',
   },
   {
     label: '为什么值得信',
-    title: '倪海夏体系推盘 + 结构化 AI 解读',
-    body: '起盘遵循倪海夏教学体系，解读基于命盘结构逐层生成，不用“神秘话术”糊弄，而是让你知道每条结论从哪里来。',
+    title: '倪海夏体系起盘，结构化解读呈现',
+    body: '遵循倪海夏体系的起盘规则，并以结构化方式呈现结论与依据，保持可追溯、可复核的阅读体验。',
+    emphasis: 'soft',
   },
 ];
 
@@ -283,9 +286,9 @@ export default function HomePage() {
               fontSize: 'clamp(38px, 6.4vw, 78px)',
               letterSpacing: '0.04em',
             }}>
-            15 分钟，看清你未来 3–5 年
+            看见你的命盘结构，
             <br />
-            最该做的选择
+            再决定下一步
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -310,8 +313,42 @@ export default function HomePage() {
             </motion.button>
             <p className="text-xs tracking-wide transition-colors duration-300"
               style={{ color: c.textMuted }}>
-              信任承诺：完整显示推演依据，不给“只报结果”的黑箱结论。
+              每一条结论，均附对应命盘依据与推演路径。
             </p>
+          </motion.div>
+
+          {/* 克制的命盘识别锚点 */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: 0.9 }}
+            className="mt-14 flex justify-center"
+          >
+            <div
+              className="relative w-[210px] h-[210px] rounded-full"
+              style={{
+                border: `1px solid ${c.goldLine}`,
+                background: theme === 'dark'
+                  ? 'radial-gradient(circle, rgba(212,168,67,0.08) 0%, rgba(212,168,67,0.02) 38%, transparent 72%)'
+                  : 'radial-gradient(circle, rgba(140,100,20,0.1) 0%, rgba(140,100,20,0.03) 42%, transparent 72%)',
+              }}
+            >
+              <div className="absolute inset-[18px] rounded-full" style={{ border: `1px dashed ${c.featureBord}` }} />
+              {Array.from({ length: 12 }).map((_, idx) => (
+                <span
+                  key={idx}
+                  className="absolute left-1/2 top-1/2 w-px h-3 -translate-x-1/2 origin-bottom"
+                  style={{
+                    transform: `translate(-50%, -100%) rotate(${idx * 30}deg)`,
+                    background: c.goldLine,
+                    opacity: 0.55,
+                  }}
+                />
+              ))}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[10px] tracking-[0.35em]" style={{ color: c.tagText }}>命盘轮廓</span>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -330,15 +367,20 @@ export default function HomePage() {
 
       {/* ══ 首屏后前 3 屏：产品叙事 ═══════════════════════════ */}
       <section className="relative z-10 px-6 md:px-12 lg:px-24 py-20 md:py-28">
+        <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none"
+          style={{ background: `linear-gradient(to bottom, transparent, ${c.bgBase})`, opacity: 0.35 }} />
         <div className="max-w-5xl mx-auto space-y-8 md:space-y-10">
           {FRONT_SECTIONS.map((item, i) => (
             <FadeIn key={item.label} delay={i * 0.08}>
               <div
                 className="rounded-3xl p-7 md:p-10"
                 style={{
-                  background: i % 2 === 0 ? c.featureBg : c.niBg,
-                  border: `1px solid ${i % 2 === 0 ? c.featureBord : c.niBorder}`,
-                  boxShadow: c.cardShadow,
+                  background: item.emphasis === 'strong' ? c.niBg : c.featureBg,
+                  border: `1px solid ${item.emphasis === 'strong' ? c.niBorder : c.featureBord}`,
+                  boxShadow: item.emphasis === 'strong'
+                    ? `0 8px 40px ${theme === 'dark' ? 'rgba(212,168,67,0.14)' : 'rgba(140,100,20,0.14)'}`
+                    : c.cardShadow,
+                  transform: item.emphasis === 'strong' ? 'scale(1.01)' : 'none',
                 }}
               >
                 <p className="text-[11px] tracking-[0.4em] uppercase mb-4" style={{ color: c.tagText }}>
