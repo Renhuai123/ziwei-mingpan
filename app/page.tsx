@@ -17,7 +17,7 @@ function FadeIn({
     <motion.div ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -76,13 +76,10 @@ function ThemeToggle() {
 
 // ─── 主星数据 ────────────────────────────────────────────
 const STARS = [
-  { name: '紫微', nature: '帝王' }, { name: '天机', nature: '智慧' },
-  { name: '太阳', nature: '阳刚' }, { name: '武曲', nature: '财富' },
-  { name: '天同', nature: '享福' }, { name: '廉贞', nature: '才艺' },
-  { name: '天府', nature: '财库' }, { name: '太阴', nature: '柔美' },
-  { name: '贪狼', nature: '桃花' }, { name: '巨门', nature: '口才' },
-  { name: '天相', nature: '辅佐' }, { name: '天梁', nature: '荫护' },
-  { name: '七杀', nature: '将帅' }, { name: '破军', nature: '开创' },
+  { name: '紫微' }, { name: '天机' }, { name: '太阳' }, { name: '武曲' },
+  { name: '天同' }, { name: '廉贞' }, { name: '天府' }, { name: '太阴' },
+  { name: '贪狼' }, { name: '巨门' }, { name: '天相' }, { name: '天梁' },
+  { name: '七杀' }, { name: '破军' },
 ];
 
 // ─── 功能模块 ────────────────────────────────────────────
@@ -90,22 +87,21 @@ const FEATURES = [
   {
     tag: '排盘体系',
     title: '倪海夏正宗\n紫微斗数',
-    subtitle: '非简化版，无捷径，遵循真正的传承',
+    subtitle: '非简化版，严格遵循倪海夏老师传承',
     points: [
-      '严格按照倪海夏老师的纳音五行局起盘法，而非网络流传的简化版本',
-      '命宫以「逆数生时」安置，身宫以「顺数生时」安置，与倪师教学一致',
-      '十四主星位置依紫微系与天府系分别推算，辅星安排遵循月支、时支规则',
-      '四化依年干飞入各宫，化禄权科忌含义解读完全参照倪师课堂讲义',
+      '纳音五行局起盘，不采用网络简化算法',
+      '命宫逆数生时、身宫顺数生时，严格对齐教学规则',
+      '十四主星与四化飞星按原法推演，结构完整可复核',
     ],
   },
   {
     tag: '命盘呈现',
     title: '完整十四主星\n四化飞星',
-    subtitle: '每颗星都有位置，每个宫位都有故事',
+    subtitle: '结构清晰，一眼看懂主轴与重点',
     points: [
-      '十四主星全部正确入宫：紫微、天机、太阳、武曲、天同、廉贞、天府、太阴、贪狼、巨门、天相、天梁、七杀、破军',
-      '十二辅星煞星完整呈现：文昌文曲、左辅右弼、天魁天钺、禄存天马、地空地劫、火星铃星',
-      '庙旺利陷四种亮度标注，一眼识别主星力量强弱',
+      '十四主星完整入宫，主星关系清楚可读',
+      '辅星与煞星同屏呈现，避免关键信息缺失',
+      '庙旺利陷亮度分级，快速识别强弱',
       '点击任意主星即可查看倪海夏老师对该星的详细解读',
     ],
   },
@@ -178,9 +174,9 @@ function useColors(theme: Theme) {
     goldLine:     d ? 'rgba(212,168,67,0.4)'                  : 'rgba(140,100,20,0.4)',
     tagText:      d ? 'rgba(212,168,67,0.6)'                  : 'rgba(120,80,10,0.65)',
     textPrimary:  d ? '#e8eef6'                               : '#1a1005',
-    textSecond:   d ? '#9aaac8'                               : '#5a4520',
-    textMuted:    d ? '#7a90b8'                               : '#7a6640',
-    textFaint:    d ? 'rgba(255,255,255,0.28)'                : '#c0a870',
+    textSecond:   d ? '#b8c6df'                               : '#4f3b17',
+    textMuted:    d ? '#9db0d0'                               : '#66522b',
+    textFaint:    d ? 'rgba(240,246,255,0.56)'                : '#94733a',
     // Card with "white shimmer" effect for contrast depth
     cardBg:       d ? 'rgba(255,255,255,0.05)'                : 'rgba(255,255,255,0.88)',
     cardBorder:   d ? 'rgba(255,255,255,0.10)'                : 'rgba(200,160,60,0.25)',
@@ -314,7 +310,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.85 }}
             className="flex flex-col items-center gap-4">
             <motion.button
-              whileHover={{ scale: 1.03, boxShadow: `0 0 40px ${c.glowTint}` }}
+              whileHover={{ y: -2, filter: 'brightness(1.06)' }}
               whileTap={{ scale: 0.97 }}
               onClick={() => router.push('/chart')}
               className="px-12 py-4 font-semibold text-base tracking-widest rounded-full transition-all duration-300"
@@ -340,12 +336,10 @@ export default function HomePage() {
                 style={{
                   background: c.starBg,
                   border: `1px solid ${c.starBorder}`,
-                  opacity: 0.88,
+                  opacity: 0.94,
                 }}>
-                <span className="text-[10px] transition-colors duration-200"
+                <span className="text-[11px] tracking-wide transition-colors duration-200"
                   style={{ color: c.starText }}>{star.name}</span>
-                <span className="text-[9px] transition-colors duration-200"
-                  style={{ color: c.starNature }}>{star.nature}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -365,7 +359,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ 哲学引言（保守优化版）══════════════════════════════ */}
-      <section className="relative z-10 overflow-hidden" style={{ padding: '104px 24px 96px' }}>
+      <section className="relative z-10 overflow-hidden" style={{ padding: '88px 24px 84px' }}>
         <div className="absolute inset-0 transition-all duration-500"
           style={{
             background: theme === 'dark'
@@ -377,7 +371,7 @@ export default function HomePage() {
           <span className="font-bold"
             style={{
               fontSize: 'clamp(220px, 38vw, 460px)',
-              color: 'rgba(212,168,67,0.03)',
+              color: 'rgba(212,168,67,0.018)',
               lineHeight: 1,
               fontFamily: 'var(--font-serif, serif)',
               letterSpacing: '-0.05em',
@@ -393,7 +387,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex items-center justify-center gap-4 mb-10">
+              className="flex items-center justify-center gap-4 mb-8">
               <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, rgba(212,168,67,0.45))' }} />
               <span className="text-[10px] tracking-[0.55em] uppercase" style={{ color: 'rgba(212,168,67,0.5)' }}>
                 命 · 运 · 观
@@ -401,32 +395,45 @@ export default function HomePage() {
               <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, rgba(212,168,67,0.45))' }} />
             </motion.div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
                 className="tracking-widest"
                 style={{
-                  fontSize: 'clamp(15px, 2vw, 24px)',
+                  fontSize: 'clamp(17px, 2.2vw, 28px)',
                   color: 'rgba(215,228,252,0.72)',
                   fontWeight: 400,
                   letterSpacing: '0.13em',
                 }}>
-                提前窥见命运的意义，
+                提前窥探命运的意义
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="tracking-wider leading-relaxed"
+                className="tracking-wider"
                 style={{
-                  fontSize: 'clamp(19px, 2.5vw, 34px)',
+                  fontSize: 'clamp(22px, 2.8vw, 36px)',
                   color: 'rgba(220,232,250,0.74)',
                   fontWeight: 400,
                   letterSpacing: '0.08em',
                 }}>
-                不在于预知未来，而在于不断认识自己、精进自己，
+                不在于预知未来
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.72, delay: 0.34 }}
+                className="tracking-wider"
+                style={{
+                  fontSize: 'clamp(20px, 2.6vw, 33px)',
+                  color: 'rgba(218,230,248,0.8)',
+                  fontWeight: 400,
+                  letterSpacing: '0.08em',
+                }}>
+                而在于不断认识自己
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20, scale: 0.97 }}
@@ -434,11 +441,11 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
                 className={`grad-text font-bold ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
                 style={{
-                  fontSize: 'clamp(22px, 3.2vw, 44px)',
+                  fontSize: 'clamp(24px, 3.4vw, 48px)',
                   letterSpacing: '0.05em',
                   lineHeight: 1.35,
                 }}>
-                最终书写属于你的人生剧本。
+                最终书写属于自己的人生剧本
               </motion.p>
             </div>
           </div>
@@ -448,10 +455,10 @@ export default function HomePage() {
       {/* ══ 功能详解 ══════════════════════════════════════ */}
       <section className="relative z-10 py-8">
         {FEATURES.map((feature, i) => (
-          <div key={i} className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 py-24"
+          <div key={i} className={`${i < 2 ? 'min-h-0' : 'min-h-screen'} flex items-center px-6 md:px-12 lg:px-24 ${i < 2 ? 'py-16 md:py-20' : 'py-24'}`}
             style={{ background: i % 2 === 1 ? c.altSection : 'transparent' }}>
             <div className="max-w-6xl mx-auto w-full">
-              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
+              <div className={`grid grid-cols-1 lg:grid-cols-2 ${i < 2 ? 'gap-10 lg:gap-12' : 'gap-12 lg:gap-20'} items-start ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
 
                 {/* 文字区 */}
                 <div className={i % 2 === 1 ? 'lg:col-start-2' : ''}>
@@ -465,27 +472,28 @@ export default function HomePage() {
                   </FadeIn>
 
                   <FadeIn delay={0.1}>
-                    <h2 className={`grad-text text-4xl md:text-5xl font-bold leading-tight mb-5 tracking-tight ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
+                    <h2 className={`grad-text ${i < 2 ? 'text-[42px] md:text-[56px]' : 'text-4xl md:text-5xl'} font-bold leading-tight mb-5 tracking-tight ${theme === 'dark' ? 'grad-text-dark' : 'grad-text-light'}`}
                       style={{ whiteSpace: 'pre-line' }}>
                       {feature.title}
                     </h2>
                   </FadeIn>
 
                   <FadeIn delay={0.2}>
-                    <p className="text-base mb-8 leading-relaxed transition-colors duration-300"
+                    <p className={`${i < 2 ? 'text-lg mb-6 max-w-xl' : 'text-base mb-8'} leading-relaxed transition-colors duration-300`}
                       style={{ color: c.textSecond }}>{feature.subtitle}</p>
                   </FadeIn>
 
                   <div className="space-y-4">
-                    {feature.points.map((point, j) => {
-                      const isHighlight = i === 1 && j === feature.points.length - 1;
+                    {(i < 2 ? feature.points.slice(0, 3) : feature.points).map((point, j, displayedPoints) => {
+                      const isHighlight = i === 1 && j === displayedPoints.length - 1;
                       return (
                         <FadeIn key={j} delay={0.25 + j * 0.08}>
                           {isHighlight ? (
-                            <div className="flex gap-3 rounded-xl px-3 py-2.5 -mx-3 transition-all duration-300"
+                            <div className="flex gap-3 rounded-2xl px-4 py-3 transition-all duration-300"
                               style={{
-                                border: `1px solid ${c.goldLine}`,
-                                background: theme === 'dark' ? 'rgba(212,168,67,0.06)' : 'rgba(180,130,30,0.08)',
+                                border: `1px solid ${theme === 'dark' ? 'rgba(212,168,67,0.45)' : 'rgba(140,100,20,0.45)'}`,
+                                background: theme === 'dark' ? 'rgba(212,168,67,0.08)' : 'rgba(180,130,30,0.12)',
+                                boxShadow: theme === 'dark' ? 'inset 0 1px 0 rgba(255,255,255,0.05)' : 'inset 0 1px 0 rgba(255,255,255,0.6)',
                               }}>
                               <div className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full"
                                 style={{ background: c.goldSolid }} />
@@ -513,7 +521,7 @@ export default function HomePage() {
                       style={{
                         border: `1px solid ${c.featureBord}`,
                         background: c.featureBg,
-                        minHeight: '320px',
+                        minHeight: i < 2 ? '420px' : '320px',
                         boxShadow: c.cardShadow,
                       }}>
                       <FeatureVisual index={i} colors={c} />
